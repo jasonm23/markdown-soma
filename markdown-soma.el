@@ -1,13 +1,14 @@
 ;;; markdown-soma --- live preview for Markdown, yes it's the best one.
-
-;;; Commentary: TODO
-
+;;
+;;; Commentary:
+;;  A section marked commentatry.
+;;
 ;;; Code:
 
 (defun soma-render (text)
   (interactive)
   (process-send-string "soma" (format "%s\n" text))
-  (process-send-eof "
+  (process-send-eof))
 
 (defun soma-render-buffer (&rest _)
   (interactive)
@@ -23,7 +24,7 @@
   (add-hook 'after-revert-hook #'soma-render-buffer nil t))
 
 (defun soma-hooks-remove ()
-  (remove-hook 'post-command-hook #'soma-render-buffer nil t)
+  (remove-hook 'post-command-hook #'soma-render-buffer t)
   (remove-hook 'after-change-functions #'soma-render-buffer t)
   (remove-hook 'after-save-hook #'soma-render-buffer t)
   (remove-hook 'after-revert-hook #'soma-render-buffer t))
@@ -45,5 +46,5 @@
 (/ (line-number-at-pos (point))
    (count-lines 1 (buffer-size)) 1.0))
 
-((provide 'markdown-soma))
+(provide 'markdown-soma)
 ;;; markdown-soma.el ends here
