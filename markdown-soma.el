@@ -49,12 +49,14 @@
            (buffer-string))))
 
 (defun markdown-soma-hooks-add ()
+  (add-hook 'kill-buffer-hook #'markdown-soma-stop nil t)
   (add-hook 'post-command-hook #'markdown-soma-render-buffer nil t)
   (add-hook 'after-change-functions #'markdown-soma-render-buffer nil t)
   (add-hook 'after-save-hook #'markdown-soma-render-buffer nil t)
   (add-hook 'after-revert-hook #'markdown-soma-render-buffer nil t))
 
 (defun markdown-soma-hooks-remove ()
+  (remove-hook 'kill-buffer-hook #'markdown-soma-stop t)
   (remove-hook 'post-command-hook #'markdown-soma-render-buffer t)
   (remove-hook 'after-change-functions #'markdown-soma-render-buffer t)
   (remove-hook 'after-save-hook #'markdown-soma-render-buffer t)
