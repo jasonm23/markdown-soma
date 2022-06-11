@@ -1,8 +1,11 @@
-;;; Markdown-soma --- live preview for Markdown.
-;;
-;; Author: Jason Milkins
+;;; markdown-soma.el --- live preview for Markdown.
 
-;; URL: https://github.com/jasonm23/markdown-soma
+;; Copyright (C) 2022 Jason Milkins
+
+;: Author: Jason Milkins <jasonm23@gmail.com>
+;: URL: https://github.com/jasonm23/markdown-soma
+;; Keywords: text markdown
+;: Version: 0
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -15,12 +18,11 @@
 ;; GNU General Public License for more details.
 
 ;; You should have received a copy of the GNU General Public License
-;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>
 
 ;;; Commentary:
-;;
 ;;  Markdown-soma live markdown preview for Emacs. Based on
-;;  vim-markdown-composer, using the same back-end rust based markdown service.
+;;  vim-markdown-composer, using the same back-end rust based markdown service
 ;;
 ;;; Code:
 
@@ -63,12 +65,28 @@
   (remove-hook 'after-revert-hook #'markdown-soma-render-buffer t))
 
 (defun markdown-soma-start ()
-  (message "markdown-soma-start")
-  (start-process "markdown-soma" "*markdown-soma*" "soma")
-  (set-process-query-on-exit-flag (get-process "markdown-soma") nil)
-  (markdown-soma-render "# Waiting...")
-  (markdown-soma-render-buffer)
-  (markdown-soma-hooks-add))
+
+  ;; check soma executable exists...
+  ;; if not, provide a message + how to build
+
+  (if (executable-find "soma")
+      (progn
+        (message "markdown-soma-start")
+        (start-process "markdown-soma" "*markdown-soma*" "soma")
+        (set-process-query-on-exit-flag (get-process "markdown-soma") nil)
+        (markdown-soma-render "# Waiting...")
+        (markdown-soma-render-buffer)
+        (markdown-soma-hooks-add))
+    ;; else
+    (message "Markdown soma execuatble `soma` not found.\
+\
+use:\
+\
+cargo build --release\
+\
+to compile it to: ./target/release/soma\
+\
+it must be findable via exec-path.")))
 
 (defun markdown-soma-stop ()
   (message "markdown-soma-stop")
