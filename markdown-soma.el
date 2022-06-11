@@ -41,12 +41,14 @@
     (markdown-soma-stop)))
 
 (defun markdown-soma-render (text)
-  (process-send-string "*markdown-soma*" (format "%s\n" text))
-  (process-send-eof "*markdown-soma*"))
+  (when (not executing-kbd-macro)
+    ;; TODO More exceptios, example when markdown mode is reformatting a table.
+    (process-send-string "*markdown-soma*" (format "%s\n" text))
+    (process-send-eof "*markdown-soma*")))
 
 (defun markdown-soma-render-buffer (&rest _)
   (markdown-soma-render
-   (format "<!-- SOMA: {\"scrollTo\": %.5f} -->\n%s"
+   (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
            (markdown-soma-current-scroll-percent)
            (buffer-string))))
 
@@ -65,10 +67,8 @@
   (remove-hook 'after-revert-hook #'markdown-soma-render-buffer t))
 
 (defun markdown-soma-start ()
-
   ;; check soma executable exists...
   ;; if not, provide a message + how to build
-
   (if (executable-find "soma")
       (progn
         (message "markdown-soma-start")
@@ -96,9 +96,11 @@ it must be findable via exec-path.")))
 
 (defun markdown-soma-current-scroll-percent ()
   "Calculate the position of point as decimal percentage of the buffer size."
-  (if (= 0 (buffer-size)) 0.0
+  (if (= 0 (buffer-size))
+      0.0
     ;; else
-    (/ (line-number-at-pos (point))
+
+    (/ (- (line-number-at-pos (point)) (/ (window-height) 2))
        (count-lines 1 (buffer-size)) 1.0)))
 
 (provide 'markdown-soma)
