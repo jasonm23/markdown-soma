@@ -4,13 +4,38 @@
 
 `markdown-soma` is an Emacs minor-mode which gives you live rendering of Markdown -> HTML / Emacs -> Browser. Powered by WebSockets and Rust.
 
-Based on the Vim plugin `vim-markdown-composer`, using a version of the same back-end service, [Aurelius](https://github.com/euclio/aurelius)
+Based on the Vim plugin `vim-markdown-composer`, using a version of the same back-end service, [Aurelius](https://github.com/euclio/aurelius) forked to `jasonm23/aurelius`.
 
 ## Install
 
-TODO: add via MELPA
+Via [MELPA](https://melpa.org)
 
-TODO: Doom emacs
+```
+M-x package-install markdown-soma
+```
+
+Using [Doom Emacs](https://github.com/doomemacs/doomemacs)
+
+```
+;; in ~/.doom.d/packages.el
+
+(package! markdown-soma)
+```
+
+### `soma` binary
+
+You'll need to compile the rust source:
+
+```
+cargo build --release
+
+# compiles:
+# -> target/release/soma 
+```
+
+`soma` must be in your exec path. 
+
+[I recommend `rustup` to get your rust environment installed.](https://rustup.rs/)
 
 ## Usage
 
@@ -33,19 +58,6 @@ GPL3
 NOTE: This is a work in progress. I used a technique which I suppose you could call, `*scratch*` driven development.
 
 This `README.md` began as a `*scratch*` file.  All the Emacs side code for this minor-mode began here as evaluated `sexp`.
-
-## Soma service
-
-To use `soma` right now, you'd need to compile the rust source:
-
-```
-cargo build --release
-
-# compiles:
-# -> target/release/soma 
-```
-
-`soma` must be in your exec path. 
 
 ## Technical note. 
 
