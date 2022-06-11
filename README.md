@@ -47,7 +47,7 @@ M-x markdown-soma
 
 This will launch your default browser, opening a tab with the rendered markdown view.
 
-Edits and commands in Emacs, will trigger a render on the browser. The browser view will automatically scroll so you can see what you're editing.
+Edits and commands in your current Emacs buffer, will trigger a new markdown render in the browser. The browser view will automatically scroll so you can see what you're editing.
 
 ## Licence
 
