@@ -1,50 +1,82 @@
-;;; markdown-soma --- live preview for Markdown, yes it's the best one.
+;;; Markdown-soma --- live preview for Markdown.
 ;;
+;; Author: Jason Milkins
+
+;; URL: https://github.com/jasonm23/markdown-soma
+
+;; This program is free software; you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 ;;; Commentary:
-;;  A section marked commentatry.
+;;
+;;  Markdown-soma live markdown preview for Emacs. Based on
+;;  vim-markdown-composer, using the same back-end rust based markdown service.
 ;;
 ;;; Code:
 
-(defun soma-render (text)
-  (interactive)
-  (process-send-string "soma" (format "%s\n" text))
-  (process-send-eof))
+(defgroup markdown-soma nil
+  "Realtime Markdown Preview"
+  :group 'markdown
+  :prefix "markdown-soma-")
 
-(defun soma-render-buffer (&rest _)
-  (interactive)
-  (soma-render
+(define-minor-mode markdown-soma-mode
+  "Live Markdown Preview"
+  :group      'markdown-soma
+  :init-value nil
+  :global     nil
+  (if markdown-soma-mode
+      (markdown-soma-start)
+    (markdown-soma-stop)))
+
+(defun markdown-soma-render (text)
+  (process-send-string "*markdown-soma*" (format "%s\n" text))
+  (process-send-eof "*markdown-soma*"))
+
+(defun markdown-soma-render-buffer (&rest _)
+  (markdown-soma-render
    (format "<!-- SOMA: {\"scrollTo\": %.5f} -->\n%s"
-           (soma-current-scroll-percent)
+           (markdown-soma-current-scroll-percent)
            (buffer-string))))
 
-(defun soma-hooks-add ()
-  (add-hook 'post-command-hook #'soma-render-buffer nil t)
-  (add-hook 'after-change-functions #'soma-render-buffer nil t)
-  (add-hook 'after-save-hook #'soma-render-buffer nil t)
-  (add-hook 'after-revert-hook #'soma-render-buffer nil t))
+(defun markdown-soma-hooks-add ()
+  (add-hook 'post-command-hook #'markdown-soma-render-buffer nil t)
+  (add-hook 'after-change-functions #'markdown-soma-render-buffer nil t)
+  (add-hook 'after-save-hook #'markdown-soma-render-buffer nil t)
+  (add-hook 'after-revert-hook #'markdown-soma-render-buffer nil t))
 
-(defun soma-hooks-remove ()
-  (remove-hook 'post-command-hook #'soma-render-buffer t)
-  (remove-hook 'after-change-functions #'soma-render-buffer t)
-  (remove-hook 'after-save-hook #'soma-render-buffer t)
-  (remove-hook 'after-revert-hook #'soma-render-buffer t))
+(defun markdown-soma-hooks-remove ()
+  (remove-hook 'post-command-hook #'markdown-soma-render-buffer t)
+  (remove-hook 'after-change-functions #'markdown-soma-render-buffer t)
+  (remove-hook 'after-save-hook #'markdown-soma-render-buffer t)
+  (remove-hook 'after-revert-hook #'markdown-soma-render-buffer t))
 
-(defun soma-start ()
-       (interactive)
-       (start-process "soma" "*soma*" "soma")
-       (soma-render "# Waiting...")
-       (soma-render-buffer)
-       (soma-hooks-add))
+(defun markdown-soma-start ()
+  (message "markdown-soma-start")
+  (start-process "markdown-soma" "*markdown-soma*" "soma")
+  (set-process-query-on-exit-flag (get-process "markdown-soma") nil)
+  (markdown-soma-render "# Waiting...")
+  (markdown-soma-render-buffer)
+  (markdown-soma-hooks-add))
 
-(defun soma-stop ()
-  (interactive)
-  (stop-process "soma")
-  (kill-buffer "*soma*")
-  (soma-hooks-remove))
+(defun markdown-soma-stop ()
+  (message "markdown-soma-stop")
+  (signal-process "markdown-soma" 1)
+  (kill-buffer "*markdown-soma*")
+  (markdown-soma-hooks-remove))
 
-(defun soma-current-scroll-percent ()
-(/ (line-number-at-pos (point))
-   (count-lines 1 (buffer-size)) 1.0))
+(defun markdown-soma-current-scroll-percent ()
+  (/ (line-number-at-pos (point))
+     (count-lines 1 (buffer-size)) 1.0))
 
 (provide 'markdown-soma)
 ;;; markdown-soma.el ends here
