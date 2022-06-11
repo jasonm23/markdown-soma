@@ -6,5 +6,5 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-aurelius = { git = "https://github.com/jasonm23/aurelius", rev = "dd2c5102" }
+aurelius = { git = "https://github.com/jasonm23/aurelius", rev = "31736dd" }
 clap = "2.33.0"

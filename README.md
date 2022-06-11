@@ -72,15 +72,12 @@ You'll see the text render in the browser.
 
 You can repeat: type something `->` press enter `->` press `^D`, _et voilà!_ The browser view will be replaced by the new text.
 
-# Todo...
+# Todo
 
 - [ ] User should be able to customise the following:
   - [ ] host address, port
   - [ ] Markdown css
   - [ ] `highlight.js` theme
-  - [ ] browser
-- [x] Integrate into an Emacs minor-mode
+  - [ ] browser  
 
 # Bugs
-
-- [x] Unrecoverable error when the buffer is empty, starting `markdown-soma`.
