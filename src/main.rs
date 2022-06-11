@@ -13,7 +13,6 @@ fn main() {
         .arg(
             Arg::with_name("host")
                 .long("host")
-                .value_name("address")
                 .help("The host address this server will listen on, Defaults to `localhost`.")
                 .takes_value(true)
         )
@@ -24,10 +23,30 @@ fn main() {
                 .takes_value(true)
         )
         .arg(
-          Arg::with_name("darkmode")
-                .long("darkmode")
-                .short("D")
-                .help("Dark mode (defaults to Light mode)")
+            Arg::with_name("working-directory")
+                .long("working-directory")
+                .value_name("dir")
+                .help(
+                    "The directory where static files will  be served from.\
+                    Relative links in the markdown will be served relative to this directory.",
+                )
+                .takes_value(true)
+        )
+        .arg(
+          Arg::with_name("css")
+                .long("custom-css")
+                .value_name("url/path")
+                .help("CSS that should be used to style the markdown output. Defaults to GitHub-like CSS.")
+                .takes_value(true)
+                .multiple(true)
+        )
+        .arg(
+            Arg::with_name("theme")
+                .long("highlight-theme")
+                .help(
+                    "The theme to use for syntax highlighting. All highlight.js themes are supported.",
+                )
+                .default_value("github"),
         )
         .get_matches();
 
@@ -37,13 +56,19 @@ fn main() {
         matches.value_of("port").unwrap_or("0")
     )).unwrap();
 
-    if matches.value_of("darkmode").unwrap_or("").contains("darkmode")  {
-        server.set_custom_css(vec!["https://raw.githubusercontent.com/StylishThemes/GitHub-Dark/master/github-dark.user.css".to_string()]).unwrap();
+    if let Some(custom_css) = matches.values_of("css") {
+        server.set_custom_css(custom_css.map(String::from).collect()).unwrap() ;
+    }
+
+    if let Some(highlight_theme) = matches.value_of("theme") {
+        server.set_highlight_theme(highlight_theme.to_string());
+    }
+
+    if let Some(working_directory) = matches.value_of("working-directory") {
+        server.set_static_root(working_directory);
     }
 
     // TODO.
-    // server.set_custom_css
-    // server.set_highlight_theme
     // server.set_static_root
 
     println!("listening on {}", server.addr());

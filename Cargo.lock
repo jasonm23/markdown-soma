@@ -40,7 +40,7 @@ dependencies = [
 [[package]]
 name = "aurelius"
 version = "0.7.3"
-source = "git+https://github.com/jasonm23/aurelius?rev=31736dd#31736dd665804f3b668e5c481025f39e460d7bec"
+source = "git+https://github.com/jasonm23/aurelius?rev=5a5f89d8#5a5f89d84f86978d3510146cce7cefc042a70f8f"
 dependencies = [
  "base64",
  "buf_redux",
