@@ -2,39 +2,39 @@
 
 ## Live Markdown in Emacs
 
-Markdown Soma gives you live rendering of Markdown text -> HTML from Emacs. Powered by websockets and Rust.
+`markdown-soma` is an Emacs minor-mode which gives you live rendering of Markdown -> HTML / Emacs -> Browser. Powered by WebSockets and Rust.
 
-Based on the Vim plugin `vim-markdown-composer` and using a version of the same back-end service, [Aurelius](https://github.com/euclio/aurelius)
-
-[Markdown-Soma](https://github.com/jasonm23/soma) uses the absolute simplest inter-process communication, `stdio`.  Emacs will push the buffer string to `soma` through `stdin` using `(process-send-string buffer-text)`.
+Based on the Vim plugin `vim-markdown-composer`, using a version of the same back-end service, [Aurelius](https://github.com/euclio/aurelius)
 
 ## Install
 
-TODO: add to MELPA
+TODO: add via MELPA
+
+TODO: Doom emacs
 
 ## Usage
 
-From a `markdown-mode` buffer do:
+To start and stop `markdown-soma` do: 
 
 ```
 M-x markdown-soma
 ```
 
-**(*cough* not yet, see below this is pre-alpha WIP software.)**
+This will launch your default browser, opening a tab with the rendered markdown view.
 
-`soma` will launch your default browser and open a tab with the rendered markdown view.
-
-When running edits and commands will trigger a render on the browser, and scroll to make sure you can see what you're editing.
+Edits and commands in Emacs, will trigger a render on the browser. The browser view will automatically scroll so you can see what you're editing.
 
 ## Licence
 
 GPL3
 
-### Code Scratch...
+- - -
 
-This is a work in progress and is using a technique, I suppose you could call, `*scratch*` driven development.
+NOTE: This is a work in progress. I used a technique which I suppose you could call, `*scratch*` driven development.
 
-This `README.md` began as a test file for `soma`.
+This `README.md` began as a `*scratch*` file.  All the Emacs side code for this minor-mode began here as evaluated `sexp`.
+
+## Soma service
 
 To use `soma` right now, you'd need to compile the rust source:
 
@@ -45,12 +45,42 @@ cargo build --release
 # -> target/release/soma 
 ```
 
-Make sure `soma` is in your path.
+`soma` must be in your exec path. 
 
-in Emacs Eval: `(load-file "markdown-soma.el")`
+## Technical note. 
 
-`M-x soma-start` 
+[Markdown-Soma](https://github.com/jasonm23/soma) does process communication via `stdin`.  Emacs sends text from the current buffer to `soma` using `(process-send-string BUFFER-TEXT PROCESS)`.
 
-To quit, `M-x soma-stop`
+`soma` expects all input to be markdown text and then processes it to HTML, which is sent via websocket to browser client(s).
 
-Things may be broken, open an issue maybe?
+We can pass anything we want the client side to process via HTML comments in the markdown text.  This way we can avoid using additional transport mechanisms or protocols, and instead keep things as simple as possible.
+
+On the client end, `aurelius` is providing the core markdown service, soma is just wrapping `aurelius` as a `stdin` buffering process.
+
+Starting `soma` on the command line will help to illustrate how it works.
+
+```
+soma
+listening on [::1]:xxxxx <- random port is generated.
+```
+
+A browser tab will open at `[::1]:xxxxx` 
+
+Type or paste any text, and press enter. Immediately after a new-line press `^D` <kbd>Ctrl</kbd>+<kbd>D</kbd>
+
+You'll see the text render in the browser.
+
+You can repeat: type something `->` press enter `->` press `^D`, _et voilà!_ The browser view will be replaced by the new text.
+
+# Todo...
+
+- [ ] User should be able to customise the following:
+  - [ ] host address, port
+  - [ ] Markdown css
+  - [ ] `highlight.js` theme
+  - [ ] browser
+- [x] Integrate into an Emacs minor-mode
+
+# Bugs
+
+- [x] Unrecoverable error when the buffer is empty, starting `markdown-soma`.

@@ -70,13 +70,16 @@
 
 (defun markdown-soma-stop ()
   (message "markdown-soma-stop")
-  (signal-process "markdown-soma" 1)
+  (stop-process "markdown-soma")
   (kill-buffer "*markdown-soma*")
   (markdown-soma-hooks-remove))
 
 (defun markdown-soma-current-scroll-percent ()
-  (/ (line-number-at-pos (point))
-     (count-lines 1 (buffer-size)) 1.0))
+  "Calculate the position of point as decimal percentage of the buffer size."
+  (if (= 0 (buffer-size)) 0.0
+    ;; else
+    (/ (line-number-at-pos (point))
+       (count-lines 1 (buffer-size)) 1.0)))
 
 (provide 'markdown-soma)
 ;;; markdown-soma.el ends here
