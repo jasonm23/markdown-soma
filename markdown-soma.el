@@ -2,10 +2,10 @@
 
 ;; Copyright (C) 2022 Jason Milkins
 
-;: Author: Jason Milkins <jasonm23@gmail.com>
-;: URL: https://github.com/jasonm23/markdown-soma
+;; Author: Jason Milkins <jasonm23@gmail.com>
+;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: text markdown
-;: Version: 0
+;; Version: 0
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
