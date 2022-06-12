@@ -42,6 +42,9 @@ $$\xleftrightharpoons{abc}$$
 
 ---
 
+<!--
+TODO:
+
 [Mermaid.js][mermaid] diagram support on the browser side. Allowing you to create directed graphs, state charts, sequence diagrams etc. 
 
 ```
@@ -59,6 +62,7 @@ graph TD;
     B-->D;
     C-->D;
 ```
+-->
 
 ## Install
 
