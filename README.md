@@ -90,4 +90,6 @@ The browser will now render the text passed to `stdin`.
 
 Try it again, type something ⟶  press enter ⟶  press `^D` and the browser will receive the  update and render.
 
+<kbd>Ctrl+C</kbd> will quit `soma`.
+
 [rustup]: https://rustup.rs
