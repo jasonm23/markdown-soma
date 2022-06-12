@@ -1,50 +1,53 @@
-use clap::{App, Arg};
-use clap::{crate_authors, crate_version};
+use clap::{Command, Arg};
 
 use aurelius::Server;
 use std::io::{self, Read};
 
+struct Args {
+    #[derive(Parser, Debug)]
+    #[clap(author, version, about, long_about = None)]
+}
+
 fn main() {
 
-    let matches = App::new("soma")
-        .author(crate_authors!())
-        .version(crate_version!())
+    let matches = Command::new("soma")
         .about("soma - websocket driven live markdown preview server")
         .arg(
-            Arg::with_name("host")
+            Arg::new("host")
                 .long("host")
                 .help("The host address this server will listen on, Defaults to `localhost`.")
                 .takes_value(true)
         )
         .arg(
-            Arg::with_name("port")
+            Arg::new("port")
                 .long("port")
                 .help("The port number the server will listen on, Defaults to 0 (system assigned)")
                 .takes_value(true)
         )
         .arg(
-            Arg::with_name("working-directory")
+            Arg::new("working-directory")
                 .long("working-directory")
                 .value_name("dir")
                 .help(
-                    "The directory where static files will  be served from.\
+                    "The directory where static files will  be served from. \
                     Relative links in the markdown will be served relative to this directory.",
                 )
                 .takes_value(true)
         )
         .arg(
-          Arg::with_name("css")
+          Arg::new("css")
                 .long("custom-css")
                 .value_name("url/path")
-                .help("CSS that should be used to style the markdown output. Defaults to GitHub-like CSS.")
+                .help("CSS that should be used to style the markdown output. \
+                       Defaults to GitHub-like CSS.")
                 .takes_value(true)
-                .multiple(true)
-        )
+                .multiple_occurrences(true)
         .arg(
-            Arg::with_name("theme")
+            Arg::new("theme")
                 .long("highlight-theme")
                 .help(
-                    "The theme to use for syntax highlighting. All highlight.js themes are supported.",
+                    "The theme to use for syntax highlighting. \
+                     All highlight.js themes are supported.",
                 )
                 .default_value("github"),
         )
@@ -67,9 +70,6 @@ fn main() {
     if let Some(working_directory) = matches.value_of("working-directory") {
         server.set_static_root(working_directory);
     }
-
-    // TODO.
-    // server.set_static_root
 
     println!("listening on {}", server.addr());
 

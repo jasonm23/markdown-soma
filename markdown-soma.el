@@ -31,6 +31,21 @@
   :group 'markdown
   :prefix "markdown-soma-")
 
+(defvar markdown-soma-working-directory nil
+  "Server web root, nil equals buffer's default directory")
+
+(defvar markdown-soma-highlight-theme "tomorrow-night"
+  "Theme for highlight.js code/syntax colors")
+
+(defvar markdown-soma-custom-css nil
+  "Custom CSS")
+
+(defvar markdown-soma-host-address "localhost"
+  "Host address")
+
+(defvar markdown-soma-host-port "5678"
+  "Host port")
+
 (define-minor-mode markdown-soma-mode
   "Live Markdown Preview"
   :group      'markdown-soma
@@ -72,17 +87,38 @@
   (if (executable-find "soma")
       (progn
         (message "markdown-soma-start")
-        (start-process "markdown-soma" "*markdown-soma*" "soma")
+
+        (start-process-shell-command
+         "markdown-soma"
+         "*markdown-soma*"
+         (format
+          "soma --host %s \
+               --port %s \
+               %s \
+               %s \
+               --working-directory %s"
+          markdown-soma-host-address
+          markdown-soma-host-port
+          (when markdown-soma-custom-css
+            (format "--custom-css '%s'" markdown-soma-custom-css))
+          (when markdown-soma-highlight-theme
+            (format "--highlight-theme '%s'" markdown-soma-highlight-theme))
+          (format "--working-directory '%s'"
+                  (or markdown-soma-working-directory default-directory))
+
         (set-process-query-on-exit-flag (get-process "markdown-soma") nil)
-        (markdown-soma-render "# Waiting...")
-        (markdown-soma-render-buffer)
+
+        (if (= 0 (buffer-size))
+            (markdown-soma-render "waiting...")
+          (markdown-soma-render-buffer))
+
         (markdown-soma-hooks-add))
     ;; else
     (message "Markdown soma execuatble `soma` not found.\
 \
 use:\
 \
-cargo build --release\
+cargo install --path .\
 \
 to compile it to: ./target/release/soma\
 \
