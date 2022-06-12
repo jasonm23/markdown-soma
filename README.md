@@ -2,7 +2,7 @@
 
 ## Live Markdown in Emacs
 
-`markdown-soma` is an Emacs minor-mode which gives you live rendering of Markdown -> HTML / Emacs -> Browser. Powered by WebSockets and Rust.
+`markdown-soma` is an Emacs minor-mode which gives you live rendering of Markdown ⟶ HTML / Emacs ⟶ Browser. Powered by WebSockets and Rust.
 
 Based on the Vim plugin `vim-markdown-composer`, using a version of the same back-end service, [Aurelius](https://github.com/euclio/aurelius) forked to `jasonm23/aurelius`.
 
