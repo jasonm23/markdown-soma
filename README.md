@@ -88,8 +88,6 @@ Type or paste any text, at the start of a new-line press `^D` (i.e. <kbd>Ctrl</k
 
 The browser will now render the text passed to `stdin`.
 
-Repeat, type something ⟶  press enter ⟶  press `^D`... 
-
-...The browser will update.
+Try it again, type something ⟶  press enter ⟶  press `^D` and the browser will receive the  update and render.
 
 [rustup]: https://rustup.rs

@@ -34,7 +34,7 @@
 (defvar markdown-soma-working-directory nil
   "Server web root, nil equals buffer's default directory.")
 
-(defvar markdown-soma-highlight-theme "tomorrow-night"
+(defvar markdown-soma-highlight-theme "hybrid"
   "Theme for highlight.js code/syntax colors.")
 
 (defvar markdown-soma-custom-css nil
