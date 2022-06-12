@@ -24,18 +24,25 @@ Using [Doom Emacs](https://github.com/doomemacs/doomemacs)
 
 ### `soma` binary
 
-You'll need to compile the rust source:
+You'll need to compile the rust source, from the package folder do:
 
-```
+```shell
 cargo build --release
 
 # compiles:
 # -> target/release/soma 
 ```
 
-`soma` must be in your exec path. 
+`soma` must be in your exec path, so we'll ask `cargo` to install it.
 
-[I recommend `rustup` to get your rust environment installed.](https://rustup.rs/)
+```shell
+cargo install --path .
+
+# install to => ~/.cargo/bin/soma 
+# ~/.cargo/bin should already be in your $PATH
+```
+
+_[I recommend `rustup` to get your rust environment installed.](https://rustup.rs/)_
 
 ## Usage
 
