@@ -90,16 +90,21 @@
         (start-process-shell-command
          "markdown-soma"
          "*markdown-soma*"
-         (format
-          "soma --host %s --port %s %s %s %s"
+
+         (format "soma --host %s --port %s %s %s %s"
+
           markdown-soma-host-address
+
           markdown-soma-host-port
-          (concat (when markdown-soma-custom-css
-                    (format " --custom-css \"%s\" " markdown-soma-custom-css)))
-          (concat(when markdown-soma-highlight-theme
-                   (format " --highlight-theme %s " markdown-soma-highlight-theme)))
-           (format "--working-directory \"%s\" "
-                   (or markdown-soma-working-directory default-directory))))
+
+          (or markdown-soma-custom-css
+              (format " --custom-css \"%s\" " markdown-soma-custom-css))
+
+          (or markdown-soma-highlight-theme
+              (format " --highlight-theme %s " markdown-soma-highlight-theme))
+
+          (format "--working-directory \"%s\" "
+                  (or markdown-soma-working-directory default-directory))))
 
         (set-process-query-on-exit-flag (get-process "markdown-soma") nil)
 
