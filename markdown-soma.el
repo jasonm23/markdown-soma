@@ -1,11 +1,11 @@
-;;; markdown-soma.el --- live preview for Markdown.
+;;; markdown-soma.el --- Live preview for Markdown
 
 ;; Copyright (C) 2022 Jason Milkins
 
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
-;; Keywords: text markdown
-;; Version: 0
+;; Keywords: wp, docs, text, markdown
+;; Version: 0.1.0
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -27,27 +27,27 @@
 ;;; Code:
 
 (defgroup markdown-soma nil
-  "Realtime Markdown Preview"
+  "Live Markdown Preview."
   :group 'markdown
   :prefix "markdown-soma-")
 
 (defvar markdown-soma-working-directory nil
-  "Server web root, nil equals buffer's default directory")
+  "Server web root, nil equals buffer's default directory.")
 
 (defvar markdown-soma-highlight-theme "tomorrow-night"
-  "Theme for highlight.js code/syntax colors")
+  "Theme for highlight.js code/syntax colors.")
 
 (defvar markdown-soma-custom-css nil
-  "Custom CSS")
+  "Custom CSS.")
 
 (defvar markdown-soma-host-address "localhost"
-  "Host address")
+  "Host address.")
 
 (defvar markdown-soma-host-port "5678"
-  "Host port")
+  "Host port.")
 
 (define-minor-mode markdown-soma-mode
-  "Live Markdown Preview"
+  "Live Markdown Preview."
   :group      'markdown-soma
   :init-value nil
   :global     nil
@@ -82,29 +82,24 @@
   (remove-hook 'after-revert-hook #'markdown-soma-render-buffer t))
 
 (defun markdown-soma-start ()
-  ;; check soma executable exists...
-  ;; if not, provide a message + how to build
+  "Start soma process, send a message if it cannot be found."
+
   (if (executable-find "soma")
       (progn
         (message "markdown-soma-start")
-
         (start-process-shell-command
          "markdown-soma"
          "*markdown-soma*"
          (format
-          "soma --host %s \
-               --port %s \
-               %s \
-               %s \
-               --working-directory %s"
+          "soma --host %s --port %s %s %s %s"
           markdown-soma-host-address
           markdown-soma-host-port
-          (when markdown-soma-custom-css
-            (format "--custom-css '%s'" markdown-soma-custom-css))
-          (when markdown-soma-highlight-theme
-            (format "--highlight-theme '%s'" markdown-soma-highlight-theme))
-          (format "--working-directory '%s'"
-                  (or markdown-soma-working-directory default-directory))
+          (concat (when markdown-soma-custom-css
+                    (format " --custom-css \"%s\" " markdown-soma-custom-css)))
+          (concat(when markdown-soma-highlight-theme
+                   (format " --highlight-theme %s " markdown-soma-highlight-theme)))
+           (format "--working-directory \"%s\" "
+                   (or markdown-soma-working-directory default-directory))))
 
         (set-process-query-on-exit-flag (get-process "markdown-soma") nil)
 
@@ -120,9 +115,7 @@ use:\
 \
 cargo install --path .\
 \
-to compile it to: ./target/release/soma\
-\
-it must be findable via exec-path.")))
+to compile it to: ~/.cargo/bin/soma")) )
 
 (defun markdown-soma-stop ()
   (message "markdown-soma-stop")

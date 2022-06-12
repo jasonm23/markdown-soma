@@ -22,27 +22,18 @@ Using [Doom Emacs](https://github.com/doomemacs/doomemacs)
 (package! markdown-soma)
 ```
 
-### `soma` binary
+### Install `soma` binary
 
-You'll need to compile the rust source, from the package folder do:
+From the package folder.
 
-```shell
-cargo build --release
+```
+cargo install --path . 
 
 # compiles:
-# -> target/release/soma 
+# ⟶ ~/.cargo/bin/soma 
 ```
 
-`soma` must be in your exec path, so we'll ask `cargo` to install it.
-
-```shell
-cargo install --path .
-
-# install to => ~/.cargo/bin/soma 
-# ~/.cargo/bin should already be in your $PATH
-```
-
-_[I recommend `rustup` to get your rust environment installed.](https://rustup.rs/)_
+I recommend [`rustup`][rustup] to get your rust environment installed.]
 
 ## Usage
 
@@ -70,33 +61,35 @@ This `README.md` began as a `*scratch*` file.  All the Emacs side code for this 
 
 [Markdown-Soma](https://github.com/jasonm23/soma) does process communication via `stdin`.  Emacs sends text from the current buffer to `soma` using `(process-send-string BUFFER-TEXT PROCESS)`.
 
-`soma` expects all input to be markdown text and then processes it to HTML, which is sent via websocket to browser client(s).
+`soma` expects input to be markdown text. This will broadcast to connected clients (as HTML), via WebSocket.
 
-We can pass anything we want the client side to process via HTML comments in the markdown text.  This way we can avoid using additional transport mechanisms or protocols, and instead keep things as simple as possible.
+You can embed a value for `scrollTo`, into the input with a magic comment. Emacs will do this for you. 
 
-On the client end, `aurelius` is providing the core markdown service, soma is just wrapping `aurelius` as a `stdin` buffering process.
+For example:
+
+```json
+<!-- SOMA: {"scrollTo": 0} // scrolls to the top.  -->
+```
+
+[`Aurelius`](https://github.com/euclio/aurelius) is providing the core markdown service, soma is just wrapping `aurelius` as a `stdin` buffering process. 
+
+### How does it work?
 
 Starting `soma` on the command line will help to illustrate how it works.
 
 ```
-soma
-listening on [::1]:xxxxx <- random port is generated.
+$ soma
+=> listening on [::1]:58943
 ```
 
-A browser tab will open at `[::1]:xxxxx` 
+A browser tab will open at `[::1]:58943` _(or some other randomly assigned available port.)_ 
 
-Type or paste any text, and press enter. Immediately after a new-line press `^D` <kbd>Ctrl</kbd>+<kbd>D</kbd>
+Type or paste any text, at the start of a new-line press `^D` (i.e. <kbd>Ctrl</kbd>+<kbd>D</kbd>)
 
-You'll see the text render in the browser.
+The browser will now render the text passed to `stdin`.
 
-You can repeat: type something `->` press enter `->` press `^D`, _et voilà!_ The browser view will be replaced by the new text.
+Repeat, type something ⟶  press enter ⟶  press `^D`... 
 
-# Todo
+...The browser will update.
 
-- [ ] User should be able to customise the following:
-  - [ ] host address, port
-  - [ ] Markdown css
-  - [ ] `highlight.js` theme
-  - [ ] browser  
-
-# Bugs
+[rustup]: https://rustup.rs
