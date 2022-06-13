@@ -56,18 +56,21 @@
     (markdown-soma-stop)))
 
 (defun markdown-soma-render (text)
+  "Render TEXT via soma."
   (when (not executing-kbd-macro)
     ;; TODO More exceptios, example when markdown mode is reformatting a table.
     (process-send-string "*markdown-soma*" (format "%s\n" text))
     (process-send-eof "*markdown-soma*")))
 
 (defun markdown-soma-render-buffer (&rest _)
+  "Render buffer via soma."
   (markdown-soma-render
    (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
            (markdown-soma-current-scroll-percent)
            (buffer-string))))
 
 (defun markdown-soma-hooks-add ()
+  "Activate hooks to trigger soma."
   (add-hook 'kill-buffer-hook #'markdown-soma-stop nil t)
   (add-hook 'post-command-hook #'markdown-soma-render-buffer nil t)
   (add-hook 'after-change-functions #'markdown-soma-render-buffer nil t)
@@ -75,6 +78,7 @@
   (add-hook 'after-revert-hook #'markdown-soma-render-buffer nil t))
 
 (defun markdown-soma-hooks-remove ()
+  "Deactivate hooks to stop triggering soma."
   (remove-hook 'kill-buffer-hook #'markdown-soma-stop t)
   (remove-hook 'post-command-hook #'markdown-soma-render-buffer t)
   (remove-hook 'after-change-functions #'markdown-soma-render-buffer t)
@@ -83,35 +87,25 @@
 
 (defun markdown-soma-start ()
   "Start soma process, send a message if it cannot be found."
-
   (if (executable-find "soma")
       (progn
         (message "markdown-soma-start")
         (start-process-shell-command
          "markdown-soma"
          "*markdown-soma*"
-
          (format "soma --host %s --port %s %s %s %s"
-
           markdown-soma-host-address
-
           markdown-soma-host-port
-
           (or markdown-soma-custom-css
               (format " --custom-css \"%s\" " markdown-soma-custom-css))
-
           (or markdown-soma-highlight-theme
               (format " --highlight-theme %s " markdown-soma-highlight-theme))
-
           (format "--working-directory \"%s\" "
                   (or markdown-soma-working-directory default-directory))))
-
         (set-process-query-on-exit-flag (get-process "markdown-soma") nil)
-
         (if (= 0 (buffer-size))
             (markdown-soma-render "waiting...")
           (markdown-soma-render-buffer))
-
         (markdown-soma-hooks-add))
     ;; else
     (message "Markdown soma execuatble `soma` not found.\
@@ -136,6 +130,41 @@ to compile it to: ~/.cargo/bin/soma")) )
 
     (/ (- (line-number-at-pos (point)) (/ (window-height) 2))
        (count-lines 1 (buffer-size)) 1.0)))
+
+(defun markdown-soma-select-css ()
+  "Select markdown CSS to use for soma."
+  (interactive)
+  (let ((ms-css--name
+         (completing-read
+          "Select markdown-soma CSS: "
+          (markdown-soma--fetch-css-styles)
+          nil t)))))
+
+(defun markdown-soma--fetch-css-styles ()
+  "Fetch the list of markdown-soma css styles."
+  (mapcar (lambda (css-file)
+            (s-replace ".css" ""))
+          (f-entries
+           (format
+            "%s/styles"
+            (markdown-soma--files-location))
+           (lambda (filename)
+             (s-ends-with? ".css" filename))
+           nil)))
+
+(defun markdown-soma--files-location ()
+  "Filepath location of markdown-soma."
+  (f-dirname (locate-library "markdown-soma")))
+
+
+
+
+(defun markdown-soma--fetch-highlightjs-styles ()
+  "Fetch the list of markdown-soma highlightjs styles."
+
+  )
+
+
 
 (provide 'markdown-soma)
 ;;; markdown-soma.el ends here

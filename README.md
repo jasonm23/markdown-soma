@@ -42,28 +42,6 @@ $$\xleftrightharpoons{abc}$$
 
 ---
 
-<!--
-TODO:
-
-[Mermaid.js][mermaid] diagram support on the browser side. Allowing you to create directed graphs, state charts, sequence diagrams etc. 
-
-```
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
-
-```mermaid
-graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
-```
--->
-
 ## Install
 
 Via [MELPA](https://melpa.org)
@@ -129,7 +107,6 @@ For example:
 
 [rustup]: https://rustup.rs
 [pulldown-cmark]: https://github.com/raphlinus/pulldown-cmark
-[mermaid]: https://mermaid-js.github.io
 [katex]: https://katex.org
 [aurelius]: https://github.com/euclio/aurelius
 [jason-aurelius]: https://github.com/jasonm23/aurelius
