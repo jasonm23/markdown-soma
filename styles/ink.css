@@ -1,0 +1,470 @@
+html {
+    font-size: 15px
+}
+
+body {
+    background-color: #fffff8;
+    color: #111;
+    counter-reset: sidenote-counter;
+    font-family: Palatino, 'Palatino Linotype', 'Palatino LT STD', 'Book Antiqua', Georgia, serif;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 1400px;
+    padding-left: 12.5%
+}
+
+.markdown-body h1 {
+    font-size: 3.2rem;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    margin-top: 4rem
+}
+
+.markdown-body h2 {
+    font-size: 2.2rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0;
+    margin-top: 5.1rem
+}
+
+.markdown-body h3 {
+    font-size: 1.7rem;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0;
+    margin-top: 2rem
+}
+
+.markdown-body p.subtitle {
+    display: block;
+    font-size: 1.8rem;
+    font-style: italic;
+    line-height: 1;
+    margin-bottom: 1rem;
+    margin-top: 1rem
+}
+
+.markdown-body a.footnote {
+    font-size: 1.4ex;
+    height: 0;
+    line-height: 1;
+    position: relative;
+    vertical-align: super
+}
+
+.markdown-body table {
+    border-collapse: separate;
+    border-spacing: 0 5px;
+    font-feature-settings: 'tnum';
+    font-size: 1.2rem;
+    line-height: 1.4;
+    margin: 1.4rem 1%;
+    text-align: right;
+    width: 98%
+}
+
+.markdown-body thead th {
+    border-bottom: 1px solid #AAAAAA;
+    border-collapse: separate;
+    border-spacing: 5px 5px;
+    font-weight: 400
+}
+
+.markdown-body td.text {
+    text-align: left
+}
+
+.markdown-body span.table-label {
+    padding-top: 8px
+}
+
+.markdown-body ol,.markdown-body ul {
+    margin-left: 1rem
+}
+
+.markdown-body table.booktabs {
+    width: auto;
+    margin: 0 auto;
+    border-spacing: 0px;
+    border-top: 2px solid #333333;
+    border-bottom: 2px solid #333333
+}
+
+.markdown-body .booktabs th {
+    border-bottom: 1px solid #333333;
+    font-weight: normal;
+    padding: .65ex .5em .4ex .5em;
+    text-align: center
+}
+
+.markdown-body .booktabs th.cmid {
+    border-bottom: 1px solid #666666
+}
+
+.markdown-body .booktabs th.nocmid {
+    border-bottom: 0
+}
+
+.markdown-body .booktabs tbody tr:first-child td {
+    padding-top: .65ex
+}
+
+.markdown-body .booktabs td {
+    padding-left: .5em;
+    padding-right: .5em;
+    text-align: left
+}
+
+.markdown-body .booktabs caption {
+    caption-side: top;
+    font-size: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1ex;
+    text-align: left;
+    width: auto
+}
+
+.markdown-body .booktabs tbody tr td.l {
+    text-align: left !important
+}
+
+.markdown-body .booktabs tbody tr td.c {
+    text-align: center !important
+}
+
+.markdown-body .booktabs tbody tr td.r {
+    text-align: right !important
+}
+
+.markdown-body article {
+    padding: 5rem 0;
+    position: relative
+}
+
+.markdown-body p,.markdown-body ol,.markdown-body ul {
+    font-size: 1.4rem
+}
+
+.markdown-body abbr,.markdown-body acronym {
+    border-bottom: 1px dotted #aaa
+}
+
+.markdown-body p,.markdown-body li {
+    line-height: 2rem;
+    margin-bottom: 1.4rem;
+    margin-top: 1.4rem;
+    padding-right: 0;
+    vertical-align: baseline
+}
+
+.markdown-body blockquote p {
+    font-size: 1.1rem;
+    width: 90%
+}
+
+.markdown-body blockquote footer {
+    text-align: right;
+    width: 90%
+}
+
+.markdown-body ul {
+    list-style-type: none
+}
+
+.markdown-body li {
+    padding: .5rem 0
+}
+
+.markdown-body li>p:first-of-type {
+    margin: 0
+}
+
+.markdown-body li p+p {
+    margin-top: 2rem;
+    margin-left: 1.4rem
+}
+
+.markdown-body figure {
+    -webkit-margin-end: 0;
+    -webkit-margin-start: 0;
+    margin-bottom: 3em
+}
+
+.markdown-body figcaption {
+    clear: right;
+    font-size: 1.0rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+    margin-top: 0;
+    position: relative;
+    vertical-align: baseline
+}
+
+.markdown-body figure.fullwidth figcaption {
+    margin-right: 24%
+}
+
+.markdown-body a {
+    border-bottom: 1px solid #777;
+    color: #111;
+    padding-bottom: 1px;
+    text-decoration: none
+}
+
+.markdown-body img {
+    max-width: 100%
+}
+
+.markdown-body .sidenote,.markdown-body .marginnote {
+    clear: right;
+    float: right;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+    margin-right: -60%;
+    margin-top: 0;
+    position: relative;
+    vertical-align: baseline
+}
+
+.markdown-body .table-caption {
+    clear: right;
+    float: right;
+    font-size: 1.0rem;
+    line-height: 1.6;
+    margin-bottom: 0;
+    margin-right: -60%;
+    margin-top: 0
+}
+
+.markdown-body .sidenote-number {
+    counter-increment: sidenote-counter
+}
+
+.markdown-body .sidenote-number:after,.markdown-body .sidenote:before {
+    color: #f00000;
+    content: counter(sidenote-counter) " ";
+    position: relative;
+    vertical-align: baseline
+}
+
+.markdown-body .sidenote-number:after {
+    content: counter(sidenote-counter);
+    font-size: .9rem;
+    left: .1rem;
+    top: -.5rem
+}
+
+.markdown-body .sidenote:before {
+    content: counter(sidenote-counter) ". ";
+    position: absolute;
+    transform: translateX(-100%) translateX(-0.25rem)
+}
+
+.markdown-body p,.markdown-body li,.markdown-body footer,.markdown-body pre.code,.markdown-body div.table-wrapper {
+    width: 90%
+}
+
+@media screen and (max-width: 760px) {
+    .markdown-body p,.markdown-body li,.markdown-body footer,.markdown-body pre.code {
+        width: 90%
+    }
+
+    .markdown-body figure {
+        max-width: 90%
+    }
+
+    .markdown-body blockquote p,.markdown-body blockquote footer {
+        width: 90%
+    }
+}
+
+.markdown-body .sans {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, sans-serif
+}
+
+.markdown-body .code {
+    font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+    font-size: 1.125rem;
+    line-height: 1.6
+}
+
+.markdown-body h1 .code,.markdown-body h2 .code,.markdown-body h3 .code {
+    font-size: 0.80em
+}
+
+.markdown-body .marginnote .code,.markdown-body .sidenote .code {
+    font-size: 1rem
+}
+
+.markdown-body pre.code {
+    overflow-x: scroll;
+    padding: 0 0 0 2em
+}
+
+.markdown-body .fullwidth {
+    max-width: 95%
+}
+
+.markdown-body span.newthought {
+    font-size: 1.2em;
+    font-variant: small-caps
+}
+
+.markdown-body input.margin-toggle {
+    display: none
+}
+
+.markdown-body input.margin-toggle:not(.sidenote-number) {
+    display: none
+}
+
+.markdown-body label.sidenote-number {
+    display: inline
+}
+
+@media (max-width: 760px) {
+    .markdown-body .sidenote,.markdown-body .marginnote {
+        display: none
+    }
+
+    .markdown-body .margin-toggle:checked+.sidenote,.markdown-body .margin-toggle:checked+.marginnote {
+        clear: both;
+        display: block;
+        float: left;
+        left: 1rem;
+        margin: 1rem 2.5%;
+        position: relative;
+        vertical-align: baseline;
+        width: 95%
+    }
+
+    .markdown-body .margin-toggle:checked+.sidenote:not(.sidenote-number),.markdown-body .margin-toggle:checked+.marginnote:not(.sidenote-number) {
+        display: inline
+    }
+
+    .markdown-body label {
+        cursor: pointer
+    }
+
+    .markdown-body pre.code {
+        padding: 0
+    }
+
+    .markdown-body .table-caption {
+        clear: both;
+        display: block;
+        float: right;
+        margin-bottom: 0.5rem;
+        margin-left: 1%;
+        margin-right: 1%;
+        margin-top: 1rem;
+        position: relative;
+        vertical-align: baseline;
+        width: 98%
+    }
+
+    .markdown-body table,.markdown-body table.booktabs {
+        width: 85%
+    }
+
+    .markdown-body img {
+        width: 100%
+    }
+}
+
+@media screen {
+    .inverted {
+        background: #0b2531
+    }
+
+    .inverted .markdown-body {
+        background: #0b2531
+    }
+
+    .inverted .markdown-body p,.inverted .markdown-body td,.inverted .markdown-body li,.inverted .markdown-body h1,.inverted .markdown-body h2,.inverted .markdown-body h3,.inverted .markdown-body h4,.inverted .markdown-body h5,.inverted .markdown-body h6,.inverted .markdown-body th,.inverted .markdown-body .math,.inverted .markdown-body dd,.inverted .markdown-body dt {
+        color: #eee !important
+    }
+
+    .inverted .markdown-body pre,.inverted .markdown-body tt {
+        color: #ddd
+    }
+
+    .inverted .markdown-body a {
+        color: #fff
+    }
+
+    .inverted .markdown-body caption,.inverted .markdown-body .footnote,.inverted .markdown-body figcaption {
+        color: rgba(255,255,255,0.5)
+    }
+
+    .markdown-body ::selection {
+        background: rgba(157,193,200,0.5)
+    }
+
+    .markdown-body h1::selection {
+        background-color: rgba(45,156,208,0.3)
+    }
+
+    .markdown-body h2::selection {
+        background-color: rgba(90,182,224,0.3)
+    }
+
+    .markdown-body h3::selection,.markdown-body h4::selection,.markdown-body h5::selection,.markdown-body h6::selection,.markdown-body li::selection,.markdown-body ol::selection {
+        background-color: rgba(133,201,232,0.3)
+    }
+
+    .markdown-body code::selection {
+        background-color: rgba(0,0,0,0.7);
+        color: #eee
+    }
+
+    .markdown-body code span::selection {
+        background-color: rgba(0,0,0,0.7) !important;
+        color: #eee !important
+    }
+
+    .markdown-body a::selection {
+        background-color: rgba(255,230,102,0.2)
+    }
+
+    .markdown-body .inverted a::selection {
+        background-color: rgba(255,230,102,0.6)
+    }
+
+    .markdown-body td::selection,.markdown-body th::selection,.markdown-body caption::selection {
+        background-color: rgba(180,237,95,0.5)
+    }
+}
+
+@media print {
+    img,table,figure {
+        page-break-inside: avoid
+    }
+
+    .markdown-body {
+        background: #fff;
+        color: #303030;
+        padding: 10px;
+        position: relative;
+        text-indent: 0
+    }
+}
+
+.mkoutlinestyle .markdown-body h2,.mkoutlinestyle .markdown-body h3 {
+    font-style: normal
+}
+
+.mkoutlinestyle .markdown-body li {
+    padding: 0
+}
+
+.mkoutlinestyle .markdown-body li::before {
+    margin-top: 0.1rem !important
+}
+
