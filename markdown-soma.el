@@ -6,6 +6,7 @@
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
 ;; Version: 0.1.0
+;; Package-Requires: ((emacs "25")  (s "1.11.0") (f "0.20.0")
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -25,6 +26,9 @@
 ;;  vim-markdown-composer, using the same back-end rust based markdown service
 ;;
 ;;; Code:
+
+(require 's)
+(require 'f)
 
 (defgroup markdown-soma nil
   "Live Markdown Preview."
@@ -131,38 +135,20 @@ to compile it to: ~/.cargo/bin/soma")) )
     (/ (- (line-number-at-pos (point)) (/ (window-height) 2))
        (count-lines 1 (buffer-size)) 1.0)))
 
+(defun markdown-soma--is-css-file-p (file)
+   (s-ends-with? ".css" file))
+
 (defun markdown-soma-select-css ()
-  "Select markdown CSS to use for soma."
+  "Select markdown CSS to use with soma."
   (interactive)
-  (let ((ms-css--name
-         (completing-read
-          "Select markdown-soma CSS: "
-          (markdown-soma--fetch-css-styles)
-          nil t)))))
-
-(defun markdown-soma--fetch-css-styles ()
-  "Fetch the list of markdown-soma css styles."
-  (mapcar (lambda (css-file)
-            (s-replace ".css" ""))
-          (f-entries
-           (format
-            "%s/styles"
-            (markdown-soma--files-location))
-           (lambda (filename)
-             (s-ends-with? ".css" filename))
-           nil)))
-
-(defun markdown-soma--files-location ()
-  "Filepath location of markdown-soma."
-  (f-dirname (locate-library "markdown-soma")))
+  (let ((css-file
+        (read-file-name ;; only existing files allowed
+         "Select CSS: " nil nil t nil)))
+    (if (markdown-soma--is-css-file-p css-file)
+        (setq markdown-soma-custom-css css-file)
+      (error "Warning markdown-soma-custom-css is %s is not a css file" css-file))))
 
 
-
-
-(defun markdown-soma--fetch-highlightjs-styles ()
-  "Fetch the list of markdown-soma highlightjs styles."
-
-  )
 
 
 
