@@ -99,7 +99,7 @@ You can embed a value for `scrollTo`, into the input with a magic comment. Emacs
 
 For example:
 
-```json
+```html
 <!-- SOMA: {"scrollTo": 0} // scrolls to the top.  -->
 ```
 
