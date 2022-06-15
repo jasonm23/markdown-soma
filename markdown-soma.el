@@ -165,7 +165,7 @@ By default, `~/.cargo/bin` will be in your `$PATH`." )
   (message "markdown-soma-stop")
   (when (process-live-p "markdown-soma")
     (stop-process "markdown-soma"))
-  (when (buffer-live-p)
+  (when (buffer-live-p "*markdown-soma*")
     (kill-buffer "*markdown-soma*"))
   (markdown-soma-hooks-remove))
 
