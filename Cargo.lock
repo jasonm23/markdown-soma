@@ -31,7 +31,7 @@ dependencies = [
 [[package]]
 name = "aurelius"
 version = "0.7.3"
-source = "git+https://github.com/jasonm23/aurelius?rev=e6c30508#e6c305084c666ee674f371fca6a5cded6ab3763c"
+source = "git+https://github.com/jasonm23/aurelius?rev=77bc781#77bc781ee96dd8766b79c0d659e0cba2d534929a"
 dependencies = [
  "base64",
  "buf_redux",
@@ -761,7 +761,7 @@ dependencies = [
 
 [[package]]
 name = "soma"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "aurelius",
  "clap",

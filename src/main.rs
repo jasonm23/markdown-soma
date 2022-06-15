@@ -6,15 +6,15 @@ use std::io::{self, Read};
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args{
-    #[clap(short, long, default_value = "localhost")]
+    #[clap(long, default_value = "localhost")]
     host: String,
-    #[clap(short, long, default_value = "0")]
+    #[clap(long, default_value = "0")]
     port: String,
-    #[clap(short, long, default_value = "github")]
+    #[clap(long, default_value = "github")]
     highlight_theme: String,
-    #[clap(short, long)]
+    #[clap(long)]
     working_directory: Option<String>,
-    #[clap(short, long)]
+    #[clap(long)]
     custom_css: Option<Vec<String>>,
 }
 
