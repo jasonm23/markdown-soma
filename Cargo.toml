@@ -5,7 +5,7 @@ description = """live markdown preview server driven by stdin and websockets.
 Once launched the process will serve any text+EOF from stdin.
 Ctrl+C on stdin will quit"""
 
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
