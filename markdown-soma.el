@@ -163,8 +163,10 @@ By default, `~/.cargo/bin` will be in your `$PATH`." )
 (defun markdown-soma-stop ()
   "Stop a running soma session."
   (message "markdown-soma-stop")
-  (stop-process "markdown-soma")
-  (kill-buffer "*markdown-soma*")
+  (when (process-live-p "markdown-soma")
+    (stop-process "markdown-soma"))
+  (when (buffer-live-p)
+    (kill-buffer "*markdown-soma*"))
   (markdown-soma-hooks-remove))
 
 (defun markdown-soma-restart ()
