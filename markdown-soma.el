@@ -111,17 +111,22 @@ Setting to nil equals buffer's default directory.")
   (if (executable-find "soma")
       (progn
         (message "markdown-soma-start")
-        (start-process-shell-command
-         "markdown-soma"
-         "*markdown-soma*"
-         (markdown-soma--shell-command))
-        (set-process-query-on-exit-flag (get-process "markdown-soma") nil)
+        (markdown-soma--run)
         (if (= 0 (buffer-size))
             (markdown-soma-render "waiting...")
           (markdown-soma-render-buffer))
         (markdown-soma-hooks-add))
     ;; else
     (message (markdown-soma--needs-executable-message))))
+
+(defun markdown-soma--run ()
+  "Run soma."
+  (start-process-shell-command
+   "markdown-soma"
+   "*markdown-soma*"
+   (markdown-soma--shell-command))
+  (set-process-query-on-exit-flag
+   (get-process "markdown-soma") nil))
 
 (defun markdown-soma--needs-executable-message ()
   "Message text shown when soma is not found."
@@ -160,13 +165,17 @@ By default, `~/.cargo/bin` will be in your `$PATH`." )
                   (expand-file-name
                    (or markdown-soma-working-directory default-directory)))))
 
-(defun markdown-soma-stop ()
-  "Stop a running soma session."
-  (message "markdown-soma-stop")
+(defun markdown-soma--kill ()
+  "Kill soma process and buffer."
   (when (process-live-p "markdown-soma")
     (stop-process "markdown-soma"))
   (when (buffer-live-p "*markdown-soma*")
-    (kill-buffer "*markdown-soma*"))
+    (kill-buffer "*markdown-soma*")))
+
+(defun markdown-soma-stop ()
+  "Stop a running soma session."
+  (message "markdown-soma-stop")
+  (markdown-soma--kill)
   (markdown-soma-hooks-remove))
 
 (defun markdown-soma-restart ()
