@@ -360,3 +360,5 @@ table caption {
 .markdown-body ul>li>ul .markdown-body ul>li>ol .markdown-body ol>li>ul .markdown-body ol>li>ol {
    margin-left: 4.5rem
 }
+
+::-webkit-scrollbar{display:none;} 
