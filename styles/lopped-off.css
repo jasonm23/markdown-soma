@@ -362,3 +362,7 @@ table caption {
 }
 
 ::-webkit-scrollbar{display:none;} 
+
+.markdown-body .task-list-item {
+  list-style-type: none;
+}

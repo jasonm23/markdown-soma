@@ -5,12 +5,11 @@ html {
 body {
     background-color: #fffff8;
     color: #111;
-    counter-reset: sidenote-counter;
     font-family: Palatino, 'Palatino Linotype', 'Palatino LT STD', 'Book Antiqua', Georgia, serif;
     margin-left: auto;
     margin-right: auto;
-    max-width: 1400px;
-    padding-left: 12.5%
+    max-width: 1000px;
+    padding-left: 5%
 }
 
 .markdown-body h1 {
@@ -84,61 +83,6 @@ body {
 
 .markdown-body ol,.markdown-body ul {
     margin-left: 1rem
-}
-
-.markdown-body table.booktabs {
-    width: auto;
-    margin: 0 auto;
-    border-spacing: 0px;
-    border-top: 2px solid #333333;
-    border-bottom: 2px solid #333333
-}
-
-.markdown-body .booktabs th {
-    border-bottom: 1px solid #333333;
-    font-weight: normal;
-    padding: .65ex .5em .4ex .5em;
-    text-align: center
-}
-
-.markdown-body .booktabs th.cmid {
-    border-bottom: 1px solid #666666
-}
-
-.markdown-body .booktabs th.nocmid {
-    border-bottom: 0
-}
-
-.markdown-body .booktabs tbody tr:first-child td {
-    padding-top: .65ex
-}
-
-.markdown-body .booktabs td {
-    padding-left: .5em;
-    padding-right: .5em;
-    text-align: left
-}
-
-.markdown-body .booktabs caption {
-    caption-side: top;
-    font-size: 90%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 1ex;
-    text-align: left;
-    width: auto
-}
-
-.markdown-body .booktabs tbody tr td.l {
-    text-align: left !important
-}
-
-.markdown-body .booktabs tbody tr td.c {
-    text-align: center !important
-}
-
-.markdown-body .booktabs tbody tr td.r {
-    text-align: right !important
 }
 
 .markdown-body article {
@@ -220,18 +164,6 @@ body {
     max-width: 100%
 }
 
-.markdown-body .sidenote,.markdown-body .marginnote {
-    clear: right;
-    float: right;
-    font-size: 1rem;
-    line-height: 1.6;
-    margin-bottom: 0;
-    margin-right: -60%;
-    margin-top: 0;
-    position: relative;
-    vertical-align: baseline
-}
-
 .markdown-body .table-caption {
     clear: right;
     float: right;
@@ -240,30 +172,6 @@ body {
     margin-bottom: 0;
     margin-right: -60%;
     margin-top: 0
-}
-
-.markdown-body .sidenote-number {
-    counter-increment: sidenote-counter
-}
-
-.markdown-body .sidenote-number:after,.markdown-body .sidenote:before {
-    color: #f00000;
-    content: counter(sidenote-counter) " ";
-    position: relative;
-    vertical-align: baseline
-}
-
-.markdown-body .sidenote-number:after {
-    content: counter(sidenote-counter);
-    font-size: .9rem;
-    left: .1rem;
-    top: -.5rem
-}
-
-.markdown-body .sidenote:before {
-    content: counter(sidenote-counter) ". ";
-    position: absolute;
-    transform: translateX(-100%) translateX(-0.25rem)
 }
 
 .markdown-body p,.markdown-body li,.markdown-body footer,.markdown-body pre.code,.markdown-body div.table-wrapper {
@@ -298,10 +206,6 @@ body {
     font-size: 0.80em
 }
 
-.markdown-body .marginnote .code,.markdown-body .sidenote .code {
-    font-size: 1rem
-}
-
 .markdown-body pre.code {
     overflow-x: scroll;
     padding: 0 0 0 2em
@@ -311,42 +215,8 @@ body {
     max-width: 95%
 }
 
-.markdown-body span.newthought {
-    font-size: 1.2em;
-    font-variant: small-caps
-}
-
-.markdown-body input.margin-toggle {
-    display: none
-}
-
-.markdown-body input.margin-toggle:not(.sidenote-number) {
-    display: none
-}
-
-.markdown-body label.sidenote-number {
-    display: inline
-}
-
 @media (max-width: 760px) {
-    .markdown-body .sidenote,.markdown-body .marginnote {
-        display: none
-    }
 
-    .markdown-body .margin-toggle:checked+.sidenote,.markdown-body .margin-toggle:checked+.marginnote {
-        clear: both;
-        display: block;
-        float: left;
-        left: 1rem;
-        margin: 1rem 2.5%;
-        position: relative;
-        vertical-align: baseline;
-        width: 95%
-    }
-
-    .markdown-body .margin-toggle:checked+.sidenote:not(.sidenote-number),.markdown-body .margin-toggle:checked+.marginnote:not(.sidenote-number) {
-        display: inline
-    }
 
     .markdown-body label {
         cursor: pointer
@@ -469,3 +339,6 @@ body {
 }
 
 
+.markdown-body .task-list-item {
+  list-style-type: none;
+}
