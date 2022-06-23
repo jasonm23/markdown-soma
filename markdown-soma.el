@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Package-Requires: ((emacs "25")  (s "1.11.0") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -51,21 +51,35 @@
   :group 'markdown
   :prefix "markdown-soma-")
 
-(defvar markdown-soma-working-directory nil
-  "Server web root, Assets referenced in your markdown page live here. \
-Setting to nil equals buffer's default directory.")
+(defcustom markdown-soma-working-directory nil
+  "Server web root. Default nil pwd becomes working directory."
+  :type '(string)
+  :require 'markdown-soma
+  :group 'markdown-soma)
 
-(defvar markdown-soma-highlight-theme "hybrid"
-  "Theme for highlight.js code/syntax colors.")
+(defcustom markdown-soma-highlight-theme "hybrid"
+  "Theme for highlight.js code/syntax colors."
+  :type '(string)
+  :require 'markdown-soma
+  :group 'markdown-soma)
 
-(defvar markdown-soma-custom-css nil
-  "Custom CSS can be set to a file or url.")
+(defcustom markdown-soma-custom-css nil
+  "Custom CSS can be set to a file or url."
+  :type '(string)
+  :require 'markdown-soma
+  :group 'markdown-soma)
 
-(defvar markdown-soma-host-address "localhost"
-  "Host address.")
+(defcustom markdown-soma-host-address "localhost"
+  "Host address."
+  :type '(string)
+  :require 'markdown-soma
+  :group 'markdown-soma)
 
-(defvar markdown-soma-host-port "0"
-  "Host port, default to 0 = system assigns a free port.")
+(defcustom markdown-soma-host-port "0"
+  "Host port, default to 0 = system assigns a free port."
+  :type '(string)
+  :require 'markdown-soma
+  :group 'markdown-soma)
 
 (define-minor-mode markdown-soma-mode
   "Live Markdown Preview."
@@ -119,6 +133,19 @@ Setting to nil equals buffer's default directory.")
     ;; else
     (message (markdown-soma--needs-executable-message))))
 
+(defun markdown-soma-stop ()
+  "Stop a running soma session."
+  (message "markdown-soma-stop")
+  (markdown-soma--kill)
+  (markdown-soma-hooks-remove))
+
+(defun markdown-soma-restart ()
+  "Restart a running soma session."
+  (interactive)
+  (when markdown-soma-mode
+    (markdown-soma-stop)
+    (markdown-soma-start)))
+
 (defun markdown-soma--run ()
   "Run soma."
   (start-process-shell-command
@@ -144,7 +171,7 @@ $ cargo install --path .\n\
 compiles:\n\
 => ~/.cargo/bin/soma\n\
 \n\
-By default, `~/.cargo/bin` will be in your `$PATH`." )
+By default, `~/.cargo/bin` will be in your `$PATH`.")
 
 (defun markdown-soma--shell-command ()
   "Generate the markdown-soma shell command."
@@ -167,23 +194,9 @@ By default, `~/.cargo/bin` will be in your `$PATH`." )
 
 (defun markdown-soma--kill ()
   "Kill soma process and buffer."
-  (when (process-live-p "markdown-soma")
-    (stop-process "markdown-soma"))
-  (when (buffer-live-p "*markdown-soma*")
+  (stop-process (get-buffer-process "*markdown-soma*"))
+  (and (buffer-live-p (get-buffer "*markdown-soma*"))
     (kill-buffer "*markdown-soma*")))
-
-(defun markdown-soma-stop ()
-  "Stop a running soma session."
-  (message "markdown-soma-stop")
-  (markdown-soma--kill)
-  (markdown-soma-hooks-remove))
-
-(defun markdown-soma-restart ()
-  "Restart a running soma session."
-  (interactive)
-  (when markdown-soma-mode
-    (markdown-soma-stop)
-    (markdown-soma-start)))
 
 (defun markdown-soma-current-scroll-percent ()
   "Calculate the position of point as decimal percentage of the buffer size."
@@ -209,14 +222,17 @@ By default, `~/.cargo/bin` will be in your `$PATH`." )
   (message "Restart markdown-soma-mode to take effect in the browser"))
 
 (defun markdown-soma-select-highlight-theme ()
+  "Select a highlightjs theme for markdown."
   (interactive)
-  (let ((list markdown-soma-highlightjs-theme-list))
-    (setq markdown-soma-highlight-theme
-          (completing-read
-           "Select highlightjs theme: " list)))
+  (setq markdown-soma-highlight-theme
+        (completing-read
+         "Select highlightjs theme: "
+         markdown-soma-highlightjs-theme-list))
   (message "Restart markdown-soma-mode to take effect in the browser"))
 
-(defvar markdown-soma-highlightjs-theme-list
+(defvar markdown-soma-highlightjs-theme-list)
+
+(setq markdown-soma-highlightjs-theme-list
   '("3024"
     "a11y-dark"
     "a11y-light"

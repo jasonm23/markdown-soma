@@ -5,11 +5,11 @@ description = """live markdown preview server driven by stdin and websockets.
 Once launched the process will serve any text+EOF from stdin.
 Ctrl+C on stdin will quit"""
 
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-aurelius = { git = "https://github.com/jasonm23/aurelius", rev = "99c4a1a" }
+aurelius = { git = "https://github.com/jasonm23/aurelius", rev = "8170019" }
 clap = { version = "3.1.18", features = ["derive"] }
