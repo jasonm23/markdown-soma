@@ -28,6 +28,26 @@ Note: heavy operations in the buffer, for example edits to large markdown table,
 will cause slowdown. Consider disabling `markdown-soma` for large table edits,
 or macro actions.
 
+## Render hooks
+
+A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`.
+
+```emacs-lisp
+;; default render buffer hooks
+
+(setq markdown-soma--render-buffer-hooks
+  '(after-revert-hook
+    after-save-hook
+    after-change-functions
+    post-command-hook))
+```
+
+You can `setq` the list to whatever you like.
+
+`post-command-hook` for example, will trigger rendering for every cursor
+movement or command, and the performance is noticeably faster with it removed
+from the list.
+
 ## Install
 
 Via [MELPA](https://melpa.org)
@@ -59,7 +79,7 @@ $ cargo install --path .
 # ⟶ ~/.cargo/bin/soma
 ```
 
-By default, `~/.cargo/bin` will be in your `$PATH`. 
+By default, `~/.cargo/bin` will be in your `$PATH`.
 
 ## Customizing
 
@@ -120,7 +140,7 @@ GPL3
 
 ## Technical note.
 
-Emacs sends text from the current buffer to `soma` 
+Emacs sends text from the current buffer to `soma`
 using `(process-send-string BUFFER-TEXT PROCESS)`.
 
 `soma` converts input (assumed to be markdown text) and broadcasts
@@ -146,4 +166,3 @@ instead of terminating at EOF it will use this as a signal to broadcast the upda
 [aurelius]: https://github.com/euclio/aurelius
 [jason-aurelius]: https://github.com/jasonm23/aurelius
 [vmc]: https://github.com/euclio/vim-markdown-composer
-
