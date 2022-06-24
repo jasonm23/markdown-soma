@@ -212,6 +212,7 @@ By default, `~/.cargo/bin` will be in your `$PATH`.")
       1.0)))
 
 (defun markdown-soma--is-css-file-p (file)
+  "Rudimenmtary check that FILE is css, does it's name end with .css?"
   (s-ends-with? ".css" file))
 
 (defun markdown-soma-select-css-file ()
