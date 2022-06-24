@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.1.4
+;; Version: 0.1.5
 ;; Package-Requires: ((emacs "25")  (s "1.11.0") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
