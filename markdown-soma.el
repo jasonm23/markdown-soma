@@ -207,7 +207,7 @@ By default, `~/.cargo/bin` will be in your `$PATH`.")
   (if (= 0 (buffer-size))
       0.0
     (/ (- (line-number-at-pos (point))
-          (/ (window-height) 2))
+          (- (window-height) (cdr (markdown-soma--window-point))))
       (count-lines 1 (buffer-size))
       1.0)))
 
@@ -235,7 +235,6 @@ By default, `~/.cargo/bin` will be in your `$PATH`.")
   (message "Restart markdown-soma-mode to take effect in the browser"))
 
 (defvar markdown-soma-highlightjs-theme-list)
-
 (setq markdown-soma-highlightjs-theme-list
   '("3024"
     "a11y-dark"
