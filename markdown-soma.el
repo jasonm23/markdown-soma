@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.1.6
+;; Version: 0.1.7
 ;; Package-Requires: ((emacs "25")  (s "1.11.0") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -90,6 +90,15 @@
       (markdown-soma-start)
     (markdown-soma-stop)))
 
+(defvar markdown-soma--render-buffer-hooks
+  "hooks which trigger markdown-soma-render-buffer.")
+
+(setq markdown-soma--render-buffer-hooks
+  '(after-revert-hook
+    after-save-hook
+    after-change-functions
+    post-command-hook))
+
 (defun markdown-soma-render (text)
   "Render TEXT via soma."
   (when (not executing-kbd-macro)
@@ -107,18 +116,14 @@
 (defun markdown-soma-hooks-add ()
   "Activate hooks to trigger soma."
   (add-hook 'kill-buffer-hook #'markdown-soma-stop nil t)
-  (add-hook 'post-command-hook #'markdown-soma-render-buffer nil t)
-  (add-hook 'after-change-functions #'markdown-soma-render-buffer nil t)
-  (add-hook 'after-save-hook #'markdown-soma-render-buffer nil t)
-  (add-hook 'after-revert-hook #'markdown-soma-render-buffer nil t))
+  (--map (add-hook it #'markdown-soma-render-buffer nil t)
+    markdown-soma--render-buffer-hooks))
 
 (defun markdown-soma-hooks-remove ()
   "Deactivate hooks to stop triggering soma."
-  (remove-hook 'kill-buffer-hook #'markdown-soma-stop t)
-  (remove-hook 'post-command-hook #'markdown-soma-render-buffer t)
-  (remove-hook 'after-change-functions #'markdown-soma-render-buffer t)
-  (remove-hook 'after-save-hook #'markdown-soma-render-buffer t)
-  (remove-hook 'after-revert-hook #'markdown-soma-render-buffer t))
+  (remove-hook 'kill-buffer-hook #'markdown-soma-stop)
+  (--map (remove-hook it #'markdown-soma-render-buffer)
+     markdown-soma--render-buffer-hooks))
 
 (defun markdown-soma-start ()
   "Start soma process, send a message if it cannot be found."
