@@ -6,6 +6,18 @@
 
 Based on the Vim plugin [`vim-markdown-composer`][vmc], using a version of the same back-end service, [Aurelius][aurelius] forked to [`jasonm23/aurelius`][jason-aurelius].
 
+## Usage
+
+From the buffer you want to preview do:
+
+```plaintext
+M-x markdown-soma
+```
+
+The default browser will open a tab with the rendered markdown view.
+
+Edits and commands in your current Emacs buffer, will trigger a new markdown render in the browser. The browser view will automatically scroll so you can see what you're editing. _(**Note:** this could be better, suggestions on how to improve it are welcome.)_
+
 ## Install
 
 Via [MELPA](https://melpa.org)
@@ -24,7 +36,7 @@ in `~/.doom.d/packages.el`
 
 ### Install `soma` executable
 
-The source for the `soma` markdown/websocket server is in the package repository. You'll need to compile it from source. If you don't have Rust on your system, use [`rustup`][rustup] to install it..
+The source for the `soma` markdown/websocket server is included the package repository. You'll need to compile it from source. If you don't have Rust on your system, use [`rustup`][rustup] to get set up.
 
 Once rust is ready, open a terminal at the package folder.
 
@@ -36,18 +48,6 @@ $ cargo install --path .
 ```
 
 By default, `~/.cargo/bin` will be in your `$PATH`. 
-
-## Usage
-
-From the buffer you want to preview do:
-
-```plaintext
-M-x markdown-soma
-```
-
-The default browser will open a tab with the rendered markdown view.
-
-Edits and commands in your current Emacs buffer, will trigger a new markdown render in the browser. The browser view will automatically scroll so you can see what you're editing.
 
 ## Customizing
 
@@ -108,19 +108,17 @@ GPL3
 
 ## Technical note.
 
-[Markdown-Soma](https://github.com/jasonm23/soma) does process communication via `stdin`.  Emacs sends text from the current buffer to `soma` using `(process-send-string BUFFER-TEXT PROCESS)`.
+Emacs sends text from the current buffer to `soma` using `(process-send-string BUFFER-TEXT PROCESS)`.
 
-`soma` expects input to be markdown text. This will broadcast to connected clients (as HTML), via WebSocket.
+`soma` converts input (assumed to be markdown text) and broadcasts changes to connected clients (as HTML).
 
-You can embed a value for `scrollTo`, into the input with a magic comment. Emacs will do this for you.
+Emacs embeds a value for `scrollTo`, into the input with a magic comment e.g.
 
-For example:
-
-```plaintext
+```
 <!-- SOMA: {"scrollTo": 0} // scrolls to the top.  -->
 ```
 
-[`Aurelius`](https://github.com/euclio/aurelius) is providing the core markdown service, `soma` is  wrapping `aurelius` as a `stdin` buffering process.
+In a nutshell [`pulldown-cmark`][pulldown-cmark] is doing the heavy lifting. Providing the core markdown service, via [`aurelius`][jason-aurelius]. The `soma` executable is essentially just wrapping [`aurelius`][jason-aurelius] as a repeating `stdin` reader, i.e. instead of terminating at EOF it will use this as a signal to broadcast to it's clients.
 
 [highlightjs]: https://highlightjs.org
 [rustup]: https://rustup.rs

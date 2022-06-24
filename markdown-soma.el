@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.1.3
+;; Version: 0.1.4
 ;; Package-Requires: ((emacs "25")  (s "1.11.0") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -198,14 +198,18 @@ By default, `~/.cargo/bin` will be in your `$PATH`.")
   (and (buffer-live-p (get-buffer "*markdown-soma*"))
     (kill-buffer "*markdown-soma*")))
 
+(defun markdown-soma--window-point ()
+  "Return the current (column . row) within the window."
+  (nth 6 (posn-at-point)))
+
 (defun markdown-soma-current-scroll-percent ()
   "Calculate the position of point as decimal percentage of the buffer size."
   (if (= 0 (buffer-size))
       0.0
-    ;; else
-
-    (/ (- (line-number-at-pos (point)) (/ (window-height) 2))
-       (count-lines 1 (buffer-size)) 1.0)))
+    (/ (- (line-number-at-pos (point))
+          (/ (window-height) 2))
+      (count-lines 1 (buffer-size))
+      1.0)))
 
 (defun markdown-soma--is-css-file-p (file)
   (s-ends-with? ".css" file))
