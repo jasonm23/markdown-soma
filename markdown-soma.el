@@ -91,157 +91,14 @@
     (markdown-soma-stop)))
 
 (defvar markdown-soma--render-buffer-hooks
-  "hooks which trigger markdown-soma-render-buffer.")
-
-(setq markdown-soma--render-buffer-hooks
+  "hooks which trigger markdown-soma-render-buffer."
   '(after-revert-hook
     after-save-hook
     after-change-functions
     post-command-hook))
 
-(defun markdown-soma-render (text)
-  "Render TEXT via soma."
-  (when (not executing-kbd-macro)
-    ;; TODO More exceptios, example when markdown mode is reformatting a table.
-    (process-send-string "*markdown-soma*" (format "%s\n" text))
-    (process-send-eof "*markdown-soma*")))
-
-(defun markdown-soma-render-buffer (&rest _)
-  "Render buffer via soma."
-  (markdown-soma-render
-   (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
-           (markdown-soma-current-scroll-percent)
-           (buffer-string))))
-
-(defun markdown-soma-hooks-add ()
-  "Activate hooks to trigger soma."
-  (add-hook 'kill-buffer-hook #'markdown-soma-stop nil t)
-  (--map (add-hook it #'markdown-soma-render-buffer nil t)
-    markdown-soma--render-buffer-hooks))
-
-(defun markdown-soma-hooks-remove ()
-  "Deactivate hooks to stop triggering soma."
-  (remove-hook 'kill-buffer-hook #'markdown-soma-stop)
-  (--map (remove-hook it #'markdown-soma-render-buffer)
-     markdown-soma--render-buffer-hooks))
-
-(defun markdown-soma-start ()
-  "Start soma process, send a message if it cannot be found."
-  (if (executable-find "soma")
-      (progn
-        (message "markdown-soma-start")
-        (markdown-soma--run)
-        (if (= 0 (buffer-size))
-            (markdown-soma-render "waiting...")
-          (markdown-soma-render-buffer))
-        (markdown-soma-hooks-add))
-    ;; else
-    (message (markdown-soma--needs-executable-message))))
-
-(defun markdown-soma-stop ()
-  "Stop a running soma session."
-  (message "markdown-soma-stop")
-  (markdown-soma--kill)
-  (markdown-soma-hooks-remove))
-
-(defun markdown-soma-restart ()
-  "Restart a running soma session."
-  (interactive)
-  (when markdown-soma-mode
-    (markdown-soma-stop)
-    (markdown-soma-start)))
-
-(defun markdown-soma--run ()
-  "Run soma."
-  (start-process-shell-command
-   "markdown-soma"
-   "*markdown-soma*"
-   (markdown-soma--shell-command))
-  (set-process-query-on-exit-flag
-   (get-process "markdown-soma") nil))
-
-(defun markdown-soma--needs-executable-message ()
-  "Message text shown when soma is not found."
-
-  "Markdown soma execuatble `soma` not found.\n\
-\n\
-The markdown WebSocket server `soma` is in the package repository. You'll need to compile it from source.\n\
-\n\
-Install rustup if rust is not on your system.\n\
-\n\
-Once rust is ready to use, open a terminal at the package folder.\n\
-\n\
-$ cargo install --path .\n\
-\n\
-compiles:\n\
-=> ~/.cargo/bin/soma\n\
-\n\
-By default, `~/.cargo/bin` will be in your `$PATH`.")
-
-(defun markdown-soma--shell-command ()
-  "Generate the markdown-soma shell command."
-  (format "soma %s %s %s %s %s"
-          (if markdown-soma-host-address
-              (format " --host %s" markdown-soma-host-address)
-            "")
-          (if markdown-soma-host-port
-              (format " --port %s" markdown-soma-host-port)
-            "")
-          (if markdown-soma-custom-css
-              (format " --custom-css \"%s\" " (expand-file-name markdown-soma-custom-css))
-             "")
-          (if  markdown-soma-highlight-theme
-            (format " --highlight-theme %s " markdown-soma-highlight-theme)
-            "")
-          (format " --working-directory \"%s\" "
-                  (expand-file-name
-                   (or markdown-soma-working-directory default-directory)))))
-
-(defun markdown-soma--kill ()
-  "Kill soma process and buffer."
-  (stop-process (get-buffer-process "*markdown-soma*"))
-  (and (buffer-live-p (get-buffer "*markdown-soma*"))
-    (kill-buffer "*markdown-soma*")))
-
-(defun markdown-soma--window-point ()
-  "Return the current (column . row) within the window."
-  (nth 6 (posn-at-point)))
-
-(defun markdown-soma-current-scroll-percent ()
-  "Calculate the position of point as decimal percentage of the buffer size."
-  (if (= 0 (buffer-size))
-      0.0
-    (/ (- (line-number-at-pos (point))
-          (- (window-height) (cdr (markdown-soma--window-point))))
-      (count-lines 1 (buffer-size))
-      1.0)))
-
-(defun markdown-soma--is-css-file-p (file)
-  "Rudimenmtary check that FILE is css, does it's name end with .css?"
-  (s-ends-with? ".css" file))
-
-(defun markdown-soma-select-css-file ()
-  "Select markdown CSS file to use with soma."
-  (interactive)
-  (let ((css-file
-         (read-file-name ;; only existing files allowed
-          "Select CSS: " nil nil t nil)))
-    (if (markdown-soma--is-css-file-p css-file)
-        (setq markdown-soma-custom-css css-file)
-      (error "Warning markdown-soma-custom-css is %s is not a css file" css-file)))
-  (message "Restart markdown-soma-mode to take effect in the browser"))
-
-(defun markdown-soma-select-highlight-theme ()
-  "Select a highlightjs theme for markdown."
-  (interactive)
-  (setq markdown-soma-highlight-theme
-        (completing-read
-         "Select highlightjs theme: "
-         markdown-soma-highlightjs-theme-list))
-  (message "Restart markdown-soma-mode to take effect in the browser"))
-
-(defvar markdown-soma-highlightjs-theme-list)
-(setq markdown-soma-highlightjs-theme-list
+(defvar markdown-soma-highlightjs-theme-list
+  "List of highlightjs themes."
   '("3024"
     "a11y-dark"
     "a11y-light"
@@ -538,6 +395,147 @@ By default, `~/.cargo/bin` will be in your `$PATH`.")
     "xcode"
     "xt256"
     "zenburn"))
+
+(defun markdown-soma-render (text)
+  "Render TEXT via soma."
+  (when (not executing-kbd-macro)
+    ;; TODO More exceptions, example when markdown mode is reformatting a table.
+    (process-send-string "*markdown-soma*" (format "%s\n" text))
+    (process-send-eof "*markdown-soma*")))
+
+(defun markdown-soma-render-buffer (&rest _)
+  "Render buffer via soma."
+  (markdown-soma-render
+   (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
+           (markdown-soma-current-scroll-percent)
+           (buffer-string))))
+
+(defun markdown-soma-hooks-add ()
+  "Activate hooks to trigger soma."
+  (add-hook 'kill-buffer-hook #'markdown-soma-stop nil t)
+  (--map (add-hook it #'markdown-soma-render-buffer nil t)
+    markdown-soma--render-buffer-hooks))
+
+(defun markdown-soma-hooks-remove ()
+  "Deactivate hooks to stop triggering soma."
+  (remove-hook 'kill-buffer-hook #'markdown-soma-stop)
+  (--map (remove-hook it #'markdown-soma-render-buffer)
+     markdown-soma--render-buffer-hooks))
+
+(defun markdown-soma-start ()
+  "Start soma process, send a message if it cannot be found."
+  (if (executable-find "soma")
+      (progn
+        (message "markdown-soma-start")
+        (markdown-soma--run)
+        (if (= 0 (buffer-size))
+            (markdown-soma-render "waiting...")
+          (markdown-soma-render-buffer))
+        (markdown-soma-hooks-add))
+    ;; else
+    (message (markdown-soma--needs-executable-message))))
+
+(defun markdown-soma-stop ()
+  "Stop a running soma session."
+  (message "markdown-soma-stop")
+  (markdown-soma--kill)
+  (markdown-soma-hooks-remove))
+
+(defun markdown-soma-restart ()
+  "Restart a running soma session."
+  (interactive)
+  (when markdown-soma-mode
+    (markdown-soma-stop)
+    (markdown-soma-start)))
+
+(defun markdown-soma--run ()
+  "Run soma."
+  (start-process-shell-command
+   "markdown-soma"
+   "*markdown-soma*"
+   (markdown-soma--shell-command))
+  (set-process-query-on-exit-flag
+   (get-process "markdown-soma") nil))
+
+(defun markdown-soma--needs-executable-message ()
+  "Message text shown when soma is not found."
+
+  "Markdown soma execuatble `soma` not found.\n\
+\n\
+The markdown WebSocket server `soma` is in the package repository. You'll need to compile it from source.\n\
+\n\
+Install rustup if rust is not on your system.\n\
+\n\
+Once rust is ready to use, open a terminal at the package folder.\n\
+\n\
+$ cargo install --path .\n\
+\n\
+compiles:\n\
+=> ~/.cargo/bin/soma\n\
+\n\
+By default, `~/.cargo/bin` will be in your `$PATH`.")
+
+(defun markdown-soma--shell-command ()
+  "Generate the markdown-soma shell command."
+  (format "soma %s %s %s %s %s"
+          (if markdown-soma-host-address
+              (format " --host %s" markdown-soma-host-address)
+            "")
+          (if markdown-soma-host-port
+              (format " --port %s" markdown-soma-host-port)
+            "")
+          (if markdown-soma-custom-css
+              (format " --custom-css \"%s\" " (expand-file-name markdown-soma-custom-css))
+             "")
+          (if  markdown-soma-highlight-theme
+            (format " --highlight-theme %s " markdown-soma-highlight-theme)
+            "")
+          (format " --working-directory \"%s\" "
+                  (expand-file-name
+                   (or markdown-soma-working-directory default-directory)))))
+
+(defun markdown-soma--kill ()
+  "Kill soma process and buffer."
+  (stop-process (get-buffer-process "*markdown-soma*"))
+  (and (buffer-live-p (get-buffer "*markdown-soma*"))
+    (kill-buffer "*markdown-soma*")))
+
+(defun markdown-soma--window-point ()
+  "Return the current (column . row) within the window."
+  (nth 6 (posn-at-point)))
+
+(defun markdown-soma-current-scroll-percent ()
+  "Calculate the position of point as decimal percentage of the buffer size."
+  (if (= 0 (buffer-size))
+      0.0
+    (/ (- (line-number-at-pos (point))
+          (- (window-height) (cdr (markdown-soma--window-point))))
+      (count-lines 1 (buffer-size))
+      1.0)))
+
+(defun markdown-soma--is-css-file-p (file)
+  "Rudimenmtary check that FILE is css, does it's name end with .css?"
+  (s-ends-with? ".css" file))
+
+(defun markdown-soma-select-css-file ()
+  "Select markdown CSS file to use with soma."
+  (interactive)
+  (let ((css-file
+         (read-file-name ;; only existing files allowed
+          "Select CSS: " nil nil t nil)))
+    (if (markdown-soma--is-css-file-p css-file)
+        (setq markdown-soma-custom-css css-file)
+      (error "Warning markdown-soma-custom-css is %s is not a css file" css-file)))
+  (message "Restart markdown-soma-mode to take effect in the browser"))
+
+(defun markdown-soma-select-highlight-theme ()
+  "Select a highlightjs theme for markdown."
+  (interactive)
+  (setq markdown-soma-highlight-theme
+        (completing-read
+         "Select highlightjs theme: "
+         markdown-soma-highlightjs-theme-list))
+  (message "Restart markdown-soma-mode to take effect in the browser"))
 
 (provide 'markdown-soma)
 ;;; markdown-soma.el ends here
