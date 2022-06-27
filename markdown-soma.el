@@ -90,6 +90,26 @@
       (markdown-soma-start)
     (markdown-soma-stop)))
 
+(defconst markdown-soma--needs-executable-message
+  "Markdown soma executable `soma` not found.
+
+The markdown WebSocket server `soma` is in the package repository.
+You'll need to compile it from source.
+
+Install rustup if rust is not on your system.
+
+Once rust is ready to use, open a terminal at the package/repo
+folder and enter:
+
+    cargo install --path .
+
+compiles:
+
+    ~/.cargo/bin/soma
+
+By default, `~/.cargo/bin` will be in your `$PATH`."
+  "Message text shown when soma is not found.")
+
 (defvar markdown-soma--render-buffer-hooks
   '(after-revert-hook
     after-save-hook
@@ -138,7 +158,7 @@
           (markdown-soma-render-buffer))
         (markdown-soma-hooks-add))
     ;; else
-    (message (markdown-soma--needs-executable-message))))
+    (message markdown-soma--needs-executable-message)))
 
 (defun markdown-soma-stop ()
   "Stop a running soma session."
@@ -146,12 +166,14 @@
   (markdown-soma--kill)
   (markdown-soma-hooks-remove))
 
-(defun markdown-soma-restart ()
+(defun markdown-soma-retart ()
   "Restart a running soma session."
   (interactive)
-  (when markdown-soma-mode
-    (markdown-soma-stop)
-    (markdown-soma-start)))
+  (if markdown-soma-mode
+      (progn
+        (markdown-soma-stop)
+        (markdown-soma-start))
+    (user-error "markdown-soma-mode not active.")))
 
 (defun markdown-soma--run ()
   "Run soma."
@@ -161,24 +183,6 @@
    (markdown-soma--shell-command))
   (set-process-query-on-exit-flag
    (get-process "markdown-soma") nil))
-
-(defun markdown-soma--needs-executable-message ()
-  "Message text shown when soma is not found."
-
-  "Markdown soma execuatble `soma` not found.\n\
-\n\
-The markdown WebSocket server `soma` is in the package repository. You'll need to compile it from source.\n\
-\n\
-Install rustup if rust is not on your system.\n\
-\n\
-Once rust is ready to use, open a terminal at the package folder.\n\
-\n\
-$ cargo install --path .\n\
-\n\
-compiles:\n\
-=> ~/.cargo/bin/soma\n\
-\n\
-By default, `~/.cargo/bin` will be in your `$PATH`.")
 
 (defun markdown-soma--shell-command ()
   "Generate the markdown-soma shell command."
@@ -190,7 +194,8 @@ By default, `~/.cargo/bin` will be in your `$PATH`.")
               (format " --port %s" markdown-soma-host-port)
             "")
           (if markdown-soma-custom-css
-              (format " --custom-css %s" (shell-quote-argument (expand-file-name markdown-soma-custom-css)))
+              (format " --custom-css %s" (shell-quote-argument
+                                          (expand-file-name markdown-soma-custom-css)))
              "")
           (if  markdown-soma-highlight-theme
             (format " --highlight-theme %s " markdown-soma-highlight-theme)
@@ -230,7 +235,7 @@ By default, `~/.cargo/bin` will be in your `$PATH`.")
           "Select CSS: " nil nil t nil)))
     (if (markdown-soma--is-css-file-p css-file)
         (setq markdown-soma-custom-css css-file)
-      (error "Warning markdown-soma-custom-css is %s is not a css file" css-file)))
+      (user-error "Error markdown-soma-custom-css is %s is not a css file" css-file)))
   (message "Restart markdown-soma-mode to take effect in the browser"))
 
 (defun markdown-soma-select-highlight-theme ()
