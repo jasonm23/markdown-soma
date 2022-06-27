@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.1.10
+;; Version: 0.1.11
 ;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -43,6 +43,7 @@
 ;;
 ;;; Code:
 
+(require 'help-mode)
 (require 's)
 (require 'dash)
 
@@ -158,7 +159,8 @@ By default, `~/.cargo/bin` will be in your `$PATH`."
           (markdown-soma-render-buffer))
         (markdown-soma-hooks-add))
     ;; else
-    (message markdown-soma--needs-executable-message)))
+    (switch-to-buffer-other-window (help-buffer))
+    (help-insert-string markdown-soma--needs-executable-message)))
 
 (defun markdown-soma-stop ()
   "Stop a running soma session."
