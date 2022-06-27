@@ -190,14 +190,14 @@ By default, `~/.cargo/bin` will be in your `$PATH`.")
               (format " --port %s" markdown-soma-host-port)
             "")
           (if markdown-soma-custom-css
-              (format " --custom-css \"%s\" " (expand-file-name markdown-soma-custom-css))
+              (format " --custom-css %s" (shell-quote-argument (expand-file-name markdown-soma-custom-css)))
              "")
           (if  markdown-soma-highlight-theme
             (format " --highlight-theme %s " markdown-soma-highlight-theme)
             "")
-          (format " --working-directory \"%s\" "
-                  (expand-file-name
-                   (or markdown-soma-working-directory default-directory)))))
+          (format " --working-directory %s" (shell-quote-argument
+                                             (expand-file-name
+                                              (or markdown-soma-working-directory default-directory))))))
 
 (defun markdown-soma--kill ()
   "Kill soma process and buffer."
