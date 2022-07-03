@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.1.11
+;; Version: 0.1.12
 ;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -208,7 +208,8 @@ By default, `~/.cargo/bin` will be in your `$PATH`."
 
 (defun markdown-soma--kill ()
   "Kill soma process and buffer."
-  (stop-process (get-buffer-process "*markdown-soma*"))
+  (when (get-buffer-process "*markdown-soma")
+   (stop-process (get-buffer-process "*markdown-soma*")))
   (and (buffer-live-p (get-buffer "*markdown-soma*"))
     (kill-buffer "*markdown-soma*")))
 
