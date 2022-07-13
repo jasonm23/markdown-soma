@@ -123,7 +123,7 @@ execute FUNC if it has not been called since WAIT."
         (message "Calling markdown-soma render buffer...")
         (apply func args)))))
 
-(setq-local markdown-soma-render-buffer (markdown-soma-throttle 'markdown-soma-render-buffer-internal))
+(defvar markdown-soma-render-buffer (markdown-soma-throttle 'markdown-soma-render-buffer-internal))
 
 (defconst markdown-soma--needs-executable-message
   "Markdown soma executable `soma` not found.
