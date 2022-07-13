@@ -83,7 +83,7 @@ By default, `~/.cargo/bin` will be in your `$PATH`.
 
 ## Customizing
 
-You can use any markdown aware CSS stylesheet (i.e. they target `.markdown-preview` CSS selector)
+You can use any markdown aware CSS style sheet (i.e. they target `.markdown-preview` CSS selector)
 
 Set the CSS file to use with:
 
