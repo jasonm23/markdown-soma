@@ -124,19 +124,6 @@ By default, `~/.cargo/bin` will be in your `$PATH`."
 (defvar markdown-soma--render-gate nil
   "Timer/Gate used by debounce.")
 
-(defun markdown-soma-render (text)
-  "Render TEXT via soma."
-  (when (not executing-kbd-macro)
-    (process-send-string "*markdown-soma*" (format "%s\n" text))
-    (process-send-eof "*markdown-soma*")))
-
-(defun markdown-soma-render-buffer (&rest _)
-  "Render buffer via soma."
-  (markdown-soma-render
-   (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
-           (markdown-soma-current-scroll-percent)
-           (buffer-string))))
-
 (defun markdown-soma--render-debounce (func &optional delay)
   "Create a debounce variant of FUNC, with optional execution gating DELAY in seconds (float) defaults to 0.1 seconds.
 
@@ -159,13 +146,29 @@ happen once per 0.2 seconds. So for 100 loops of message, we
 should only see one message. (Assuming of course the machine can try running
 the function 100 times in 0.2 seconds.)"
 
- (let ((delay (or delay 0.1)))
+ (let ((delay (or delay 0.1))
+       (result nil))
    (lambda (&rest args)
-     (when (null markdown-soma--render-gate) (apply func args))
+     (when (null markdown-soma--render-gate) (setq-local result (apply func args)))
      (setq-local markdown-soma--render-gate t)
      (run-with-timer delay nil
                      (lambda () (setq-local markdown-soma--render-gate nil)))
-     nil)))
+     result)))
+
+(defun markdown-soma-render (text)
+  "Render TEXT via soma."
+  (when (not executing-kbd-macro)
+    (process-send-string (get-process"markdown-soma") (format "%s\n" text))
+    (process-send-eof (get-process"markdown-soma"))))
+
+(defun markdown-soma--render-buffer-internal (&rest _)
+  "Render buffer via soma."
+  (markdown-soma-render
+   (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
+           (markdown-soma-current-scroll-percent)
+           (buffer-string))))
+
+(fset #'markdown-soma-render-buffer (markdown-soma--render-debounce #'markdown-soma--render-buffer-internal))
 
 (defun markdown-soma-hooks-add ()
   "Activate hooks to trigger soma."
