@@ -121,10 +121,12 @@ By default, `~/.cargo/bin` will be in your `$PATH`."
   '("3024" "a11y-dark" "a11y-light" "agate" "an-old-hope" "androidstudio" "apathy" "apprentice" "arduino-light" "arta" "ascetic" "ashes" "atelier-cave-dark" "atelier-cave-light" "atelier-cave" "atelier-cave.dark" "atelier-cave.light" "atelier-dune-dark" "atelier-dune-light" "atelier-dune" "atelier-dune.dark" "atelier-dune.light" "atelier-estuary-dark" "atelier-estuary-light" "atelier-estuary" "atelier-estuary.dark" "atelier-estuary.light" "atelier-forest-dark" "atelier-forest-light" "atelier-forest" "atelier-forest.dark" "atelier-forest.light" "atelier-heath-dark" "atelier-heath-light" "atelier-heath" "atelier-heath.dark" "atelier-heath.light" "atelier-lakeside-dark" "atelier-lakeside-light" "atelier-lakeside" "atelier-lakeside.dark" "atelier-lakeside.light" "atelier-plateau-dark" "atelier-plateau-light" "atelier-plateau" "atelier-plateau.dark" "atelier-plateau.light" "atelier-savanna-dark" "atelier-savanna-light" "atelier-savanna" "atelier-savanna.dark" "atelier-savanna.light" "atelier-seaside-dark" "atelier-seaside-light" "atelier-seaside" "atelier-seaside.dark" "atelier-seaside.light" "atelier-sulphurpool-dark" "atelier-sulphurpool-light" "atelier-sulphurpool" "atelier-sulphurpool.dark" "atelier-sulphurpool.light" "atlas" "atom-one-dark-reasonable" "atom-one-dark" "atom-one-light" "bespin" "black-metal-bathory" "black-metal-burzum" "black-metal-dark-funeral" "black-metal-gorgoroth" "black-metal-immortal" "black-metal-khold" "black-metal-marduk" "black-metal-mayhem" "black-metal-nile" "black-metal-venom" "black-metal" "brewer" "bright" "brogrammer" "brown-paper" "brown-papersq.png" "brown_paper" "brown_papersq.png" "brush-trees-dark" "brush-trees" "chalk" "circus" "classic-dark" "classic-light" "codepen-embed" "codeschool" "color-brewer" "colors" "cupcake" "cupertino" "danqing" "darcula" "dark-violet" "dark" "darkmoss" "darktooth" "darkula" "decaf" "default-dark" "default-light" "default" "devibeans" "dirtysea" "docco" "dracula" "edge-dark" "edge-light" "eighties" "embers" "equilibrium-dark" "equilibrium-gray-dark" "equilibrium-gray-light" "equilibrium-light" "espresso" "eva-dim" "eva" "far" "felipec" "flat" "foundation" "framer" "fruit-soda" "gigavolt" "github-dark-dimmed" "github-dark" "github-gist" "github" "gml" "google-dark" "google-light" "googlecode" "gradient-dark" "gradient-light" "grayscale-dark" "grayscale-light" "grayscale" "green-screen" "gruvbox-dark-hard" "gruvbox-dark-medium" "gruvbox-dark-pale" "gruvbox-dark-soft" "gruvbox-dark" "gruvbox-light-hard" "gruvbox-light-medium" "gruvbox-light-soft" "gruvbox-light" "hardcore" "harmonic16-dark" "harmonic16-light" "heetch-dark" "heetch-light" "helios" "hopscotch" "horizon-dark" "horizon-light" "humanoid-dark" "humanoid-light" "hybrid" "ia-dark" "ia-light" "icy-dark" "idea" "intellij-light" "ir-black" "ir_black" "isbl-editor-dark" "isbl-editor-light" "isotope" "kimber" "kimbie-dark" "kimbie-light" "kimbie.dark" "kimbie.light" "lightfair" "lioshi" "london-tube" "macintosh" "magula" "marrakesh" "materia" "material-darker" "material-lighter" "material-palenight" "material-vivid" "material" "mellow-purple" "mexico-light" "mocha" "mono-blue" "monokai-sublime" "monokai" "monokai_sublime" "nebula" "night-owl" "nnfx-dark" "nnfx-light" "nord" "nova" "obsidian" "ocean" "oceanicnext" "one-light" "onedark" "outrun-dark" "panda-syntax-dark" "panda-syntax-light" "papercolor-dark" "papercolor-light" "paraiso-dark" "paraiso-light" "paraiso" "paraiso.dark" "paraiso.light" "pasque" "phd" "pico" "pojoaque" "pojoaque.jpg" "pop" "porple" "purebasic" "qtcreator-dark" "qtcreator-light" "qtcreator_dark" "qtcreator_light" "qualia" "railscasts" "rainbow" "rebecca" "ros-pine-dawn" "ros-pine-moon" "ros-pine" "routeros" "sagelight" "sandcastle" "school-book" "school-book.png" "school_book" "school_book.png" "seti-ui" "shades-of-purple" "shapeshifter" "silk-dark" "silk-light" "snazzy" "solar-flare-light" "solar-flare" "solarized-dark" "solarized-light" "solarized_dark" "solarized_light" "spacemacs" "srcery" "stackoverflow-dark" "stackoverflow-light" "summercamp" "summerfruit-dark" "summerfruit-light" "sunburst" "synth-midnight-terminal-dark" "synth-midnight-terminal-light" "tango" "tender" "tokyo-night-dark" "tokyo-night-light" "tomorrow-night-blue" "tomorrow-night-bright" "tomorrow-night-eighties" "tomorrow-night" "tomorrow" "twilight" "unikitty-dark" "unikitty-light" "vs" "vs2015" "vulcan" "windows-10-light" "windows-10" "windows-95-light" "windows-95" "windows-high-contrast-light" "windows-high-contrast" "windows-nt-light" "windows-nt" "woodland" "xcode-dusk" "xcode" "xt256" "zenburn")
   "List of highlightjs themes.")
 
+(defvar markdown-soma--render-gate nil
+  "Timer/Gate used by debounce.")
+
 (defun markdown-soma-render (text)
   "Render TEXT via soma."
   (when (not executing-kbd-macro)
-    ;; TODO More exceptions, example when markdown mode is reformatting a table.
     (process-send-string "*markdown-soma*" (format "%s\n" text))
     (process-send-eof "*markdown-soma*")))
 
@@ -134,6 +136,36 @@ By default, `~/.cargo/bin` will be in your `$PATH`."
    (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
            (markdown-soma-current-scroll-percent)
            (buffer-string))))
+
+(defun markdown-soma--render-debounce (func &optional delay)
+  "Create a debounce variant of FUNC, with optional execution gating DELAY in seconds (float) defaults to 0.1 seconds.
+
+For example:
+
+```lisp
+(defun my-function (n)
+  \"My function send a message with N\"
+  (message \"%i\" n))
+
+(fset #'my-function-with-debounce (debounce #'my-function 0.2))
+
+(dotimes (it 100) (my-function-with-debounce it))
+
+(dotimes (it 100) (myfunction it))
+```
+
+The execution of my-function-with-debouce will be gated to only
+happen once per 0.2 seconds. So for 100 loops of message, we
+should only see one message. (Assuming of course the machine can try running
+the function 100 times in 0.2 seconds.)"
+
+ (let ((delay (or delay 0.1)))
+   (lambda (&rest args)
+     (when (null markdown-soma--render-gate) (apply func args))
+     (setq-local markdown-soma--render-gate t)
+     (run-with-timer delay nil
+                     (lambda () (setq-local markdown-soma--render-gate nil)))
+     nil)))
 
 (defun markdown-soma-hooks-add ()
   "Activate hooks to trigger soma."
