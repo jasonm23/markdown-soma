@@ -5,8 +5,8 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.2.1
-;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1"))
+;; Version: 0.2.2
+;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (cl-lib "2.02"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -42,6 +42,8 @@
 ;;  CSS path needs to be absolute. (css URL support is in the works.)
 ;;
 ;;; Code:
+
+;;; -*- lexical-binding: t -*-
 
 (require 'help-mode)
 (require 's)
@@ -114,7 +116,8 @@ By default, `~/.cargo/bin` will be in your `$PATH`."
 (defvar markdown-soma--render-buffer-hooks
   '(after-revert-hook
     after-save-hook
-    after-change-functions)
+    after-change-functions
+    post-command-hook)
   "A collection of hooks which trigger markdown-soma-render-buffer.")
 
 (defvar markdown-soma-highlightjs-theme-list
@@ -122,53 +125,28 @@ By default, `~/.cargo/bin` will be in your `$PATH`."
   "List of highlightjs themes.")
 
 (defvar markdown-soma--render-gate nil
-  "Timer/Gate used by debounce.")
-
-(defun markdown-soma--render-debounce (func &optional delay)
-  "Create a debounce variant of FUNC, with optional execution gating DELAY in seconds (float) defaults to 0.1 seconds.
-
-For example:
-
-```lisp
-(defun my-function (n)
-  \"My function send a message with N\"
-  (message \"%i\" n))
-
-(fset #'my-function-with-debounce (debounce #'my-function 0.2))
-
-(dotimes (it 100) (my-function-with-debounce it))
-
-(dotimes (it 100) (myfunction it))
-```
-
-The execution of my-function-with-debouce will be gated to only
-happen once per 0.2 seconds. So for 100 loops of message, we
-should only see one message. (Assuming of course the machine can try running
-the function 100 times in 0.2 seconds.)"
-
- (let ((delay (or delay 0.1))
-       (result nil))
-   (lambda (&rest args)
-     (when (null markdown-soma--render-gate) (setq-local result (apply func args)))
-     (setq-local markdown-soma--render-gate t)
-     (run-with-timer delay nil
-                     (lambda () (setq-local markdown-soma--render-gate nil)))
-     result)))
+  "Gate when t pauses render.")
 
 (defun markdown-soma-render (text)
-  "Render TEXT via soma."
-  (when (not executing-kbd-macro)
-    (process-send-string (get-process"markdown-soma") (format "%s\n" text))
-    (process-send-eof (get-process"markdown-soma"))))
+  "Render TEXT via soma.
 
-(defun markdown-soma--render-buffer-internal (&rest _)
+markdown-soma-render is debounced to 250ms."
+  (message "render attempt")
+  (when (null markdown-soma--render-gate)
+    (message "render done...")
+    (process-send-string (get-process"markdown-soma") (format "%s\n" text))
+    (process-send-eof (get-process"markdown-soma")))
+  (setq-local markdown-soma--render-gate t)
+  (run-with-timer 0.250 nil
+                  (lambda ()
+                    (setq-local markdown-soma--render-gate nil))))
+
+(defun markdown-soma-render-buffer ()
   "Render buffer via soma."
   (markdown-soma-render
    (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
            (markdown-soma-current-scroll-percent)
            (buffer-string))))
-
-(fset #'markdown-soma-render-buffer (markdown-soma--render-debounce #'markdown-soma--render-buffer-internal))
 
 (defun markdown-soma-hooks-add ()
   "Activate hooks to trigger soma."
