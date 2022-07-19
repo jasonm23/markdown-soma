@@ -1,0 +1,7 @@
+# Markdown Soma .plan file.
+
+### Issues.
+
+- [ ] Stopping causes an error (probably because I was over-killing the process)
+- [ ] Check if markdown-soma.css and github-dark.css have any differences.
+- [ ] Fix body background colors on all CSS (so they match .markdown-preview class)
