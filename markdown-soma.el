@@ -6,7 +6,7 @@
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
 ;; Version: 0.2.2
-;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (cl-lib "2.02"))
+;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -47,6 +47,7 @@
 
 (require 'help-mode)
 (require 's)
+(require 'f)
 (require 'dash)
 
 (defgroup markdown-soma nil
@@ -241,6 +242,39 @@ markdown-soma-render is debounced to 250ms."
 (defun markdown-soma--is-css-file-p (file)
   "Rudimenmtary check that FILE is css, does it's name end with .css?"
   (s-ends-with? ".css" file))
+
+(defun markdown-soma--source-dir ()
+ "The installed location of markdown-soma."
+ (f-dirname
+  (file-truename
+   (string-replace ".elc" ".el"
+                   (locate-library "markdown-soma")))))
+
+(defun markdown-soma--builtin-css-theme-names ()
+  "A list of CSS theme names supplied with markdown-soma."
+  (--map (f-base it) (markdown-soma--builtin-css-theme-files)))
+
+(defun markdown-soma--builtin-css-theme-files ()
+  "A list of CSS themes filenames supplied with markdown-soma."
+  (f-entries (format "%s%s%s"
+              (markdown-soma--source-dir)
+              (f-path-separator)
+              "styles")
+             'markdown-soma--is-css-file-p nil))
+
+(defun markdown-soma--css-pathname-from-builtin-name (name)
+  "Return the path and filename of CSS theme matching NAME."
+  (--find (s-contains-p name it) (markdown-soma--builtin-css-theme-files)))
+
+(defun markdown-soma-select-builtin-css ()
+  "Select markdown CSS from builtin themes."
+  (interactive)
+  (setq markdown-soma-custom-css
+   (markdown-soma--css-pathname-from-builtin-name
+    (completing-read
+     "Select CSS theme: "
+     (markdown-soma--builtin-css-theme-names))))
+  (message "Restart markdown-soma-mode to take effect in the browser"))
 
 (defun markdown-soma-select-css-file ()
   "Select markdown CSS file to use with soma."
