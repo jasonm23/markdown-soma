@@ -221,9 +221,7 @@ markdown-soma-render is debounced to 250ms."
 
 (defun markdown-soma--kill ()
   "Kill soma process and buffer."
-  (when (get-buffer-process "*markdown-soma")
-   (stop-process (get-buffer-process "*markdown-soma*")))
-  (and (buffer-live-p (get-buffer "*markdown-soma*"))
+  (when (buffer-live-p (get-buffer "*markdown-soma*"))
     (kill-buffer "*markdown-soma*")))
 
 (defun markdown-soma--window-point ()
