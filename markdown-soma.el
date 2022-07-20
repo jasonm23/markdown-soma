@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.2.3
+;; Version: 0.2.4
 ;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -132,9 +132,7 @@ By default, `~/.cargo/bin` will be in your `$PATH`."
   "Render TEXT via soma.
 
 markdown-soma-render is debounced to 250ms."
-  (message "render attempt")
   (when (null markdown-soma--render-gate)
-    (message "render done...")
     (process-send-string (get-process"markdown-soma") (format "%s\n" text))
     (process-send-eof (get-process"markdown-soma")))
   (setq-local markdown-soma--render-gate t)
@@ -187,7 +185,7 @@ markdown-soma-render is debounced to 250ms."
   (if markdown-soma-mode
       (progn
         (markdown-soma-stop)
-        (markdown-soma-start))
+        (run-with-timer 0.2 nil #'markdown-soma-start))
     (user-error "Please note markdown-soma-mode is not currently active")))
 
 (defun markdown-soma--run ()
