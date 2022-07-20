@@ -181,7 +181,7 @@ markdown-soma-render is debounced to 250ms."
   (markdown-soma--kill)
   (markdown-soma-hooks-remove))
 
-(defun markdown-soma-retart ()
+(defun markdown-soma-restart ()
   "Restart a running soma session."
   (interactive)
   (if markdown-soma-mode
