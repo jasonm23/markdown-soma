@@ -24,10 +24,6 @@ render in the browser. The browser view will automatically scroll so you can see
 what you're editing. _(This could be better, suggestions on how to
 improve it are welcome.)_
 
-Note: heavy operations in the buffer, for example edits to large markdown table,
-will cause slowdown. Consider disabling `markdown-soma` for large table edits,
-or macro actions.
-
 ## Render hooks
 
 A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`.
@@ -43,10 +39,6 @@ A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`
 ```
 
 You can `setq` the list to whatever you like.
-
-`post-command-hook` for example, will trigger rendering for every cursor
-movement or command, and the performance is noticeably faster with it removed
-from the list.
 
 ## Install
 
@@ -83,19 +75,47 @@ By default, `~/.cargo/bin` will be in your `$PATH`.
 
 ## Customizing
 
-You can use any markdown aware CSS stylesheet (i.e. they target `.markdown-preview` CSS selector)
+You can select a builtin CSS theme with::
 
-Set the CSS file to use with:
+```plaintext
+M-x markdown-soma-select-builtin-css
+```
+
+To persist the setting, select a theme name and add it to your emacs init with:
+
+```
+(setq markdown-soma-custom-css
+   (markdown-soma--css-pathname-from-builtin-name "theme name")
+```
+
+You can also use any other markdown aware CSS stylesheet (i.e. targets CSS
+selectors `#markdown-preview` and/or `.markdown-preview` as markdown content
+containers..)
+
+Set a custom CSS file to use with:
 
 ```plaintext
 M-x markdown-soma-select-css-file
 ```
-_Note: the CSS style will apply to the next session started._
+_Note: the CSS style will apply after restarting `markdown-soma-mode`._
 
-You can also select a [`highlightjs`][highlightjs] theme:
+To persist the setting add to your emacs init
+
+```
+(setq markdown-soma-custom-css "/path/to/your.css")
+```
+
+You can select a [`highlightjs`][highlightjs] theme:
 
 ```plaintext
 M-x markdown-soma-select-highlight-theme
+```
+
+To persist the setting add to your emacs init
+
+```
+;; Change "theme name" to the selected highlightjs theme.
+(setq markdown-soma-highlightjs-theme "theme name")
 ```
 
 ## Markdown support
