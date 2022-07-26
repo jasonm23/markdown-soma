@@ -47,6 +47,14 @@
 ;;  what you're editing. _(This could be better, suggestions on how to
 ;;  improve it are welcome.)_
 ;;
+;;  ## Render any buffer in a browser
+;;
+;;  Markdown soma can also render any buffer in a browser with code highlighting.
+;;
+;;  ```
+;;  M-x markdown-soma-buffer-view
+;;  ```
+;;
 ;;  ## Render hooks
 ;;
 ;;  A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`.
