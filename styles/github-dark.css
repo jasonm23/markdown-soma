@@ -1,5 +1,4 @@
-task-list-item body,
-.markdown-body {
+body, .markdown-body {
   color-scheme: dark;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
