@@ -31,7 +31,7 @@ dependencies = [
 [[package]]
 name = "aurelius"
 version = "0.7.3"
-source = "git+https://github.com/jasonm23/aurelius?rev=99c4a1a#99c4a1a144c7f42b84aab6b40dec758120ef06e5"
+source = "git+https://github.com/jasonm23/aurelius?rev=5e2b5aa#5e2b5aaac001f569f861ea5b0e23cd8a1fb77927"
 dependencies = [
  "base64",
  "buf_redux",
@@ -622,9 +622,9 @@ dependencies = [
 
 [[package]]
 name = "pulldown-cmark"
-version = "0.7.2"
+version = "0.9.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ca36dea94d187597e104a5c8e4b07576a8a45aa5db48a65e12940d3eb7461f55"
+checksum = "34f197a544b0c9ab3ae46c359a7ec9cbbb5c7bf97054266fecb7ead794a181d6"
 dependencies = [
  "bitflags",
  "memchr",
@@ -761,7 +761,7 @@ dependencies = [
 
 [[package]]
 name = "soma"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "aurelius",
  "clap",
