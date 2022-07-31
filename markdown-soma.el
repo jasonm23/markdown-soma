@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.2.5
+;; Version: 0.2.6
 ;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -230,7 +230,7 @@
   :require 'markdown-soma
   :group 'markdown-soma)
 
-(defcustom markdown-soma-custom-css nil
+(defcustom markdown-soma-custom-css (markdown-soma--css-pathname-from-builtin-name "markdown-soma")
   "Custom CSS can be set to a file or url."
   :type '(string)
   :require 'markdown-soma
@@ -342,9 +342,9 @@ markdown-soma-render is debounced to 250ms."
 (defun markdown-soma-stop ()
   "Stop a running soma session."
   (message "markdown-soma-stop")
-  (markdown-soma--kill)
-  (markdown-soma-hooks-remove))
-
+  (markdown-soma-hooks-remove)
+  (markdown-soma--kill))
+  
 (defun markdown-soma-restart ()
   "Restart a running soma session."
   (interactive)
@@ -436,7 +436,7 @@ markdown-soma-render is debounced to 250ms."
 
 (defun markdown-soma--css-pathname-from-builtin-name (name)
   "Return the path and filename of CSS theme matching NAME."
-  (--find (s-contains-p name it) (markdown-soma--builtin-css-theme-files)))
+  (--find (s-ends-with-p (format "%s.css" name) it) (markdown-soma--builtin-css-theme-files)))
 
 (defun markdown-soma-select-builtin-css ()
   "Select markdown CSS from builtin themes."
