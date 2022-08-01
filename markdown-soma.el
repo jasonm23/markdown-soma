@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.2.7
+;; Version: 0.2.8
 ;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -23,186 +23,186 @@
 
 ;;; Commentary:
 ;;
-;;  # Markdown Soma
+;; # Markdown Soma
 ;;
-;;  ### Live Markdown in Emacs
+;; ### Live Markdown in Emacs
 ;;
-;;  `markdown-soma` is an Emacs minor-mode which gives you live rendering of
-;;  Markdown to HTML.
+;; `markdown-soma` is an Emacs minor-mode which gives you live rendering of
+;; Markdown to HTML.
 ;;
-;;  Based on the Vim plugin [`vim-markdown-composer`][vmc],
+;; Based on the Vim plugin [`vim-markdown-composer`][vmc],
 ;;
-;;  ## Usage
+;; ## Usage
 ;;
-;;  To start:
+;; To start:
 ;;
-;;  ```plaintext
-;;  M-x markdown-soma
-;;  ```
+;; ```plaintext
+;; M-x markdown-soma
+;; ```
 ;;
-;;  The default browser will open a tab with the rendered markdown view.
+;; The default browser will open a tab with the rendered markdown view.
 ;;
-;;  Edits and commands in your current Emacs buffer, will trigger a new markdown
-;;  render in the browser. The browser view will automatically scroll so you can see
-;;  what you're editing. _(This could be better, suggestions on how to
-;;  improve it are welcome.)_
+;; Edits and commands in your current Emacs buffer, will trigger a new markdown
+;; render in the browser. The browser view will automatically scroll so you can see
+;; what you're editing. _(This could be better, suggestions on how to
+;; improve it are welcome.)_
 ;;
-;;  ## Render hooks
+;; ## Render hooks
 ;;
-;;  A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`.
+;; A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`.
 ;;
-;;  ```emacs-lisp
-;;  ;; default render buffer hooks
+;; ```emacs-lisp
+;; ;; default render buffer hooks
 ;;
-;;  (setq markdown-soma--render-buffer-hooks
-;;    '(after-revert-hook
-;;      after-save-hook
-;;      after-change-functions
-;;      post-command-hook))
-;;  ```
+;; (setq markdown-soma--render-buffer-hooks
+;;   '(after-revert-hook
+;;     after-save-hook
+;;     after-change-functions
+;;     post-command-hook))
+;; ```
 ;;
-;;  ## Install
+;; ## Install
 ;;
-;;  Via [MELPA](https://melpa.org)
+;; Via [MELPA](https://melpa.org)
 ;;
-;;  ```plaintext
-;;  M-x package-install markdown-soma
-;;  ```
+;; ```plaintext
+;; M-x package-install markdown-soma
+;; ```
 ;;
-;;  Using [Doom Emacs](https://github.com/doomemacs/doomemacs)
+;; Using [Doom Emacs](https://github.com/doomemacs/doomemacs)
 ;;
-;;  in `~/.doom.d/packages.el`
+;; in `~/.doom.d/packages.el`
 ;;
-;;  ```plaintext
-;;  (package! markdown-soma)
-;;  ```
+;; ```plaintext
+;; (package! markdown-soma)
+;; ```
 ;;
-;;  ### Install `soma` executable
+;; ### Install `soma` executable
 ;;
-;;  The source for the `soma` markdown/websocket server is included the package
-;;  repository. You'll need to compile it from source. If you don't have Rust on
-;;  your system, use [rustup] to get set up.
+;; The source for the `soma` markdown/websocket server is included the package
+;; repository. You'll need to compile it from source. If you don't have Rust on
+;; your system, use [rustup] to get set up.
 ;;
-;;  Once rust is ready, open a terminal at the package folder.
+;; Once rust is ready, open a terminal at the package folder.
 ;;
-;;  ```shell
-;;  $ cargo install --path .
+;; ```shell
+;; $ cargo install --path .
 ;;
-;;  # compiles:
-;;  # ⟶ ~/.cargo/bin/soma
-;;  ```
+;; # compiles:
+;; # ⟶ ~/.cargo/bin/soma
+;; ```
 ;;
-;;  By default, `~/.cargo/bin` will be in your `$PATH`.
+;; By default, `~/.cargo/bin` will be in your `$PATH`.
 ;;
-;;  ## Customizing
+;; ## Customizing
 ;;
-;;  You can select a builtin CSS theme with::
+;; You can select a builtin CSS theme with::
 ;;
-;;  ```plaintext
-;;  M-x markdown-soma-select-builtin-css
-;;  ```
+;; ```plaintext
+;; M-x markdown-soma-select-builtin-css
+;; ```
 ;;
-;;  To persist the setting, select a theme name and add it to your emacs init with:
+;; To persist the setting, select a theme name and add it to your Emacs init with:
 ;;
-;;  ```
-;;  (setq markdown-soma-custom-css
-;;     (markdown-soma--css-pathname-from-builtin-name "theme name")
-;;  ```
+;; ```
+;; (setq markdown-soma-custom-css
+;;    (markdown-soma--css-pathname-from-builtin-name "theme name")
+;; ```
 ;;
-;;  You can also use any other markdown aware CSS stylesheet (i.e. targets CSS
-;;  selectors `#markdown-preview` and/or `.markdown-preview` as markdown content
-;;  containers..)
+;; You can also use any other markdown aware CSS stylesheet (i.e. targets CSS
+;; selectors `#markdown-preview` and/or `.markdown-preview` as markdown content
+;; containers..)
 ;;
-;;  Set a custom CSS file to use with:
+;; Set a custom CSS file to use with:
 ;;
-;;  ```plaintext
-;;  M-x markdown-soma-select-css-file
-;;  ```
-;;  _Note: the CSS style will apply after restarting `markdown-soma-mode`._
+;; ```plaintext
+;; M-x markdown-soma-select-css-file
+;; ```
+;; _Note: the CSS style will apply after restarting `markdown-soma-mode`._
 ;;
-;;  To persist the setting add to your Emacs init
+;; To persist the setting add to your Emacs init
 ;;
-;;  ```
-;;  (setq markdown-soma-custom-css "/path/to/your.css")
-;;  ```
+;; ```
+;; (setq markdown-soma-custom-css "/path/to/your.css")
+;; ```
 ;;
-;;  You can select a [highlightjs] theme:
+;; You can select a [highlightjs] theme:
 ;;
-;;  ```plaintext
-;;  M-x markdown-soma-select-highlight-theme
-;;  ```
+;; ```plaintext
+;; M-x markdown-soma-select-highlight-theme
+;; ```
 ;;
-;;  To persist the setting add to your Emacs init
+;; To persist the setting add to your Emacs init
 ;;
-;;  ```
-;;  ;; Change "theme name" to the selected highlightjs theme.
-;;  (setq markdown-soma-highlightjs-theme "theme name")
-;;  ```
+;; ```
+;; ;; Change "theme name" to the selected highlightjs theme.
+;; (setq markdown-soma-highlightjs-theme "theme name")
+;; ```
 ;;
-;;  ## Markdown support
+;; ## Markdown support
 ;;
-;;  Soma converts markdown to HTML, using [pulldown-cmark].
-;;  It is 100% compliant with the common-markdown spec.
+;; Soma converts markdown to HTML, using [pulldown-cmark].
+;; It is 100% compliant with the common-markdown spec.
 ;;
-;;  ### Extensions
+;; ### Extensions
 ;;
-;;  - Github flavored markdown (gfm) tables
-;;  - GFM code fences
-;;  - GFM task lists
-;;  - Strike-through
+;; - Github flavored markdown (gfm) tables
+;; - GFM code fences
+;; - GFM task lists
+;; - Strike-through
 ;;
-;;  ---
+;; ---
 ;;
-;;  TeX/MathJax support thanks to [KaTeX][katex]
+;; TeX/MathJax support thanks to [KaTeX][katex]
 ;;
-;;  e.g. `\\sqrt{3x-1}` wrapped in `$` ⟶ `$\\sqrt{3x-1}$` to    display the expression ⟶  $\\sqrt{3x-1}$
+;; e.g. `\\sqrt{3x-1}` wrapped in `$` ⟶ `$\\sqrt{3x-1}$` to    display the expression ⟶  $\\sqrt{3x-1}$
 ;;
-;;  wrapping with `\\(\\)` e.g. `\\(\\sqrt{3x-1}\\)` gives the same \\(\\sqrt{3x-1}\\) inline.
+;; wrapping with `\\(\\)` e.g. `\\(\\sqrt{3x-1}\\)` gives the same \\(\\sqrt{3x-1}\\) inline.
 ;;
-;;  Use `$$...$$` or `\\[..\\]`to center the expression in a presentation style.
+;; Use `$$...$$` or `\\[..\\]`to center the expression in a presentation style.
 ;;
-;;  e.g. `$$\\sqrt{3x-1}$$`
+;; e.g. `$$\\sqrt{3x-1}$$`
 ;;
-;;  $$\\sqrt{3x-1}$$
+;; $$\\sqrt{3x-1}$$
 ;;
-;;  `$$n = {A \pm \sqrt{b^4-4ac} \over 2a}$$`
+;; `$$n = {A \pm \sqrt{b^4-4ac} \over 2a}$$`
 ;;
-;;  $$n = {A \pm \sqrt{b^4-4ac} \over 2a}$$
+;; $$n = {A \pm \sqrt{b^4-4ac} \over 2a}$$
 ;;
-;;  `$$\xleftrightharpoons{abc}$$`
+;; `$$\xleftrightharpoons{abc}$$`
 ;;
-;;  $$\xleftrightharpoons{abc}$$
+;; $$\xleftrightharpoons{abc}$$
 ;;
-;;  ---
+;; ---
 ;;
-;;  ## Technical note.
+;; ## Technical note.
 ;;
-;;  Emacs sends text from the current buffer to `soma`
-;;  using `(process-send-string BUFFER-TEXT PROCESS)`.
+;; Emacs sends text from the current buffer to `soma`
+;; using `(process-send-string BUFFER-TEXT PROCESS)`.
 ;;
-;;  `soma` converts input (assumed to be markdown text) and broadcasts
-;;  changes to connected clients (as HTML).
+;; `soma` converts input (assumed to be markdown text) and broadcasts
+;; changes to connected clients (as HTML).
 ;;
-;;  Emacs embeds a value for `scrollTo`, into the input with a
-;;  magic comment e.g.
+;; Emacs embeds a value for `scrollTo`, into the input with a
+;; magic comment e.g.
 ;;
-;;  ```
-;;  <!-- SOMA: {"scrollTo": 0} // scrolls to the top.  -->
-;;  ```
+;; ```
+;; <!-- SOMA: {"scrollTo": 0} // scrolls to the top.  -->
+;; ```
 ;;
-;;  In a nutshell [`pulldown-cmark`][pulldown-cmark] is doing the heavy lifting.
-;;  Providing the core markdown service, via [`aurelius`][jason-aurelius]. Which in
-;;  turn provides the web/websocket interface. The `soma` executable is essentially
-;;  just wrapping [`aurelius`][jason-aurelius] as a repeating `stdin` reader, i.e.
-;;  instead of terminating at EOF it will use this as a signal to broadcast the updated content to clients.
+;; In a nutshell [`pulldown-cmark`][pulldown-cmark] is doing the heavy lifting.
+;; Providing the core markdown service, via [`aurelius`][jason-aurelius]. Which in
+;; turn provides the web/websocket interface. The `soma` executable is essentially
+;; just wrapping [`aurelius`][jason-aurelius] as a repeating `stdin` reader, i.e.
+;; instead of terminating at EOF it will use this as a signal to broadcast the updated content to clients.
 ;;
-;;  [highlightjs]: https://highlightjs.org
-;;  [rustup]: https://rustup.rs
-;;  [pulldown-cmark]: https://github.com/raphlinus/pulldown-cmark
-;;  [katex]: https://katex.org
-;;  [aurelius]: https://github.com/euclio/aurelius
-;;  [jason-aurelius]: https://github.com/jasonm23/aurelius
-;;  [vmc]: https://github.com/euclio/vim-markdown-composer
+;; [highlightjs]: https://highlightjs.org
+;; [rustup]: https://rustup.rs
+;; [pulldown-cmark]: https://github.com/raphlinus/pulldown-cmark
+;; [katex]: https://katex.org
+;; [aurelius]: https://github.com/euclio/aurelius
+;; [jason-aurelius]: https://github.com/jasonm23/aurelius
+;; [vmc]: https://github.com/euclio/vim-markdown-composer
 ;;
 ;;; Code:
 
@@ -291,6 +291,13 @@ By default, `~/.cargo/bin' will be in `$PATH'."
   "Toggle on to view source in browser.")
 
 ;;;###autoload
+(defun markdown-soma-toggle-source-view (force)
+  "Toggle source view or FORCE on."
+  (interactive "p")
+  (if force
+      (setq markdown-soma-source-view t)
+    (setq markdown-soma-source-view (not markdown-soma-source-view))))
+
 (defun markdown-soma--source-dir ()
  "The installed location of markdown-soma."
  (f-dirname
@@ -298,12 +305,10 @@ By default, `~/.cargo/bin' will be in `$PATH'."
    (replace-regexp-in-string "[.]elc$" ".el"
                    (locate-library "markdown-soma")))))
 
-;;;###autoload
 (defun markdown-soma--is-css-file-p (file)
   "Rudimenmtary check that FILE is css, does it's name end with .css?"
   (s-ends-with? ".css" file))
 
-;;;###autoload
 (defun markdown-soma--builtin-css-theme-files ()
   "A list of CSS themes filenames supplied with markdown-soma."
   (f-entries (format "%s%s%s"
@@ -312,12 +317,10 @@ By default, `~/.cargo/bin' will be in `$PATH'."
               "styles")
              'markdown-soma--is-css-file-p nil))
 
-;;;###autoload
 (defun markdown-soma--css-pathname-from-builtin-name (name)
   "Return the path and filename of CSS theme matching NAME."
   (--find (s-ends-with-p (format "%s.css" name) it) (markdown-soma--builtin-css-theme-files)))
 
-;;;###autoload
 (defun markdown-soma-render (text)
   "Render TEXT via soma.
 
@@ -330,12 +333,10 @@ markdown-soma-render is debounced to 250ms."
                   (lambda ()
                     (setq-local markdown-soma--render-gate nil))))
 
-;;;###autoload
 (defun markdown-soma--buffer-as-source (text)
  "Wrap TEXT in markdown code fence."
  (format "```\n%s\n```" text))
 
-;;;###autoload
 (defun markdown-soma-render-buffer ()
   "Render buffer via soma."
   (markdown-soma-render
@@ -343,21 +344,18 @@ markdown-soma-render is debounced to 250ms."
            (markdown-soma-current-scroll-percent)
            (if markdown-soma-source-view (markdown-soma--buffer-as-source (buffer-string)) (buffer-string)))))
 
-;;;###autoload
 (defun markdown-soma-hooks-add ()
   "Activate hooks to trigger soma."
   (add-hook 'kill-buffer-hook #'markdown-soma-stop nil t)
   (--map (add-hook it #'markdown-soma-render-buffer nil t)
     markdown-soma--render-buffer-hooks))
 
-;;;###autoload
 (defun markdown-soma-hooks-remove ()
   "Deactivate hooks to stop triggering soma."
   (remove-hook 'kill-buffer-hook #'markdown-soma-stop)
   (--map (remove-hook it #'markdown-soma-render-buffer)
      markdown-soma--render-buffer-hooks))
 
-;;;###autoload
 (defun markdown-soma-start ()
   "Start soma process, send a message if it cannot be found."
   (unless markdown-soma-custom-css (setq markdown-soma-custom-css (markdown-soma--css-pathname-from-builtin-name "markdown-soma")))
@@ -373,7 +371,6 @@ markdown-soma-render is debounced to 250ms."
     (switch-to-buffer-other-window (help-buffer))
     (help-insert-string markdown-soma--needs-executable-message)))
 
-;;;###autoload
 (defun markdown-soma-stop ()
   "Stop a running soma session."
   (message "markdown-soma-stop")
@@ -390,7 +387,6 @@ markdown-soma-render is debounced to 250ms."
         (run-with-timer 0.2 nil #'markdown-soma-start))
     (user-error "Please note markdown-soma-mode is not currently active")))
 
-;;;###autoload
 (defun markdown-soma--run ()
   "Run soma."
   (start-process-shell-command
@@ -400,7 +396,6 @@ markdown-soma-render is debounced to 250ms."
   (set-process-query-on-exit-flag
    (get-process "markdown-soma") nil))
 
-;;;###autoload
 (defun markdown-soma--shell-command ()
   "Generate the markdown-soma shell command."
   (format "soma %s %s %s %s %s"
@@ -421,7 +416,6 @@ markdown-soma-render is debounced to 250ms."
                                              (expand-file-name
                                               (or markdown-soma-working-directory default-directory))))))
 
-;;;###autoload
 (defun markdown-soma--kill ()
   "Kill soma process and buffer."
   (when (buffer-live-p (get-buffer "*markdown-soma*"))
@@ -439,8 +433,6 @@ markdown-soma-render is debounced to 250ms."
           (- (window-height) (cdr (markdown-soma--window-point))))
       (count-lines 1 (buffer-size))
       1.0)))
-
-
 
 (defun markdown-soma--builtin-css-theme-names ()
   "A list of CSS theme names supplied with markdown-soma."
