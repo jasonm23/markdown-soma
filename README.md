@@ -1,20 +1,19 @@
+
 # Markdown Soma
 
 ### Live Markdown in Emacs
 
 `markdown-soma` is an Emacs minor-mode which gives you live rendering of
-Markdown ⟶ HTML / Emacs ⟶ Browser. Powered by WebSockets and Rust.
+Markdown to HTML.
 
-Based on the Vim plugin [`vim-markdown-composer`][vmc], using a version of the
-same back-end service, [Aurelius][aurelius] forked to
-[`jasonm23/aurelius`][jason-aurelius].
+Based on the Vim plugin [`vim-markdown-composer`][vmc],
 
 ## Usage
 
-From the buffer you want to preview do:
+To start:
 
 ```plaintext
-M-x markdown-soma
+M-x markdown-soma-mode
 ```
 
 The default browser will open a tab with the rendered markdown view.
@@ -38,8 +37,6 @@ A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`
     post-command-hook))
 ```
 
-You can `setq` the list to whatever you like.
-
 ## Install
 
 Via [MELPA](https://melpa.org)
@@ -60,7 +57,7 @@ in `~/.doom.d/packages.el`
 
 The source for the `soma` markdown/websocket server is included the package
 repository. You'll need to compile it from source. If you don't have Rust on
-your system, use [`rustup`][rustup] to get set up.
+your system, use [rustup] to get set up.
 
 Once rust is ready, open a terminal at the package folder.
 
@@ -75,13 +72,13 @@ By default, `~/.cargo/bin` will be in your `$PATH`.
 
 ## Customizing
 
-You can select a builtin CSS theme with::
+You can select a builtin CSS theme:
 
 ```plaintext
 M-x markdown-soma-select-builtin-css
 ```
 
-To persist the setting, select a theme name and add it to your emacs init with:
+To persist the setting, select a theme name and add it to your Emacs init with:
 
 ```
 (setq markdown-soma-custom-css
@@ -97,30 +94,30 @@ Set a custom CSS file to use with:
 ```plaintext
 M-x markdown-soma-select-css-file
 ```
-_Note: the CSS style will apply after restarting `markdown-soma-mode`._
 
-To persist the setting add to your emacs init
+_CSS styles will be applied after restarting `markdown-soma-mode`._
+
+To persist the setting add to your Emacs init:
 
 ```
 (setq markdown-soma-custom-css "/path/to/your.css")
 ```
 
-You can select a [`highlightjs`][highlightjs] theme:
+You can select a [highlightjs] theme:
 
 ```plaintext
 M-x markdown-soma-select-highlight-theme
 ```
 
-To persist the setting add to your emacs init
+To persist the setting add to your Emacs init
 
 ```
 ;; Change "theme name" to the selected highlightjs theme.
 (setq markdown-soma-highlightjs-theme "theme name")
 ```
-
 ## Markdown support
 
-Soma converts markdown to HTML, using [pulldown-cmark][pulldown-cmark].
+Soma converts markdown to HTML, using [pulldown-cmark].
 It is 100% compliant with the common-markdown spec.
 
 ### Extensions
@@ -153,10 +150,6 @@ $$n = {A \pm \sqrt{b^4-4ac} \over 2a}$$
 $$\xleftrightharpoons{abc}$$
 
 ---
-
-## Licence
-
-GPL3
 
 ## Technical note.
 
