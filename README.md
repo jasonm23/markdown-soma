@@ -12,7 +12,7 @@ Based on the Vim plugin [`vim-markdown-composer`][vmc],
 
 To start:
 
-```plaintext
+```
 M-x markdown-soma-mode
 ```
 
@@ -41,7 +41,7 @@ A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`
 
 Via [MELPA](https://melpa.org)
 
-```plaintext
+```
 M-x package-install markdown-soma
 ```
 
@@ -49,7 +49,7 @@ Using [Doom Emacs](https://github.com/doomemacs/doomemacs)
 
 in `~/.doom.d/packages.el`
 
-```plaintext
+```
 (package! markdown-soma)
 ```
 
@@ -74,7 +74,7 @@ By default, `~/.cargo/bin` will be in your `$PATH`.
 
 You can select a builtin CSS theme:
 
-```plaintext
+```
 M-x markdown-soma-select-builtin-css
 ```
 
@@ -91,11 +91,15 @@ containers..)
 
 Set a custom CSS file to use with:
 
-```plaintext
+```
 M-x markdown-soma-select-css-file
 ```
 
-_CSS styles will be applied after restarting `markdown-soma-mode`._
+CSS styles will be applied after restarting `markdown-soma-mode`.
+
+```
+M-x markdown-soma-restart
+```
 
 To persist the setting add to your Emacs init:
 
@@ -105,7 +109,7 @@ To persist the setting add to your Emacs init:
 
 You can select a [highlightjs] theme:
 
-```plaintext
+```
 M-x markdown-soma-select-highlight-theme
 ```
 

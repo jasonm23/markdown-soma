@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.2.8
+;; Version: 0.2.9
 ;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@
 ;;
 ;; To start:
 ;;
-;; ```plaintext
+;; ```
 ;; M-x markdown-soma
 ;; ```
 ;;
@@ -65,7 +65,7 @@
 ;;
 ;; Via [MELPA](https://melpa.org)
 ;;
-;; ```plaintext
+;; ```
 ;; M-x package-install markdown-soma
 ;; ```
 ;;
@@ -73,7 +73,7 @@
 ;;
 ;; in `~/.doom.d/packages.el`
 ;;
-;; ```plaintext
+;; ```
 ;; (package! markdown-soma)
 ;; ```
 ;;
@@ -98,7 +98,7 @@
 ;;
 ;; You can select a builtin CSS theme with::
 ;;
-;; ```plaintext
+;; ```
 ;; M-x markdown-soma-select-builtin-css
 ;; ```
 ;;
@@ -115,10 +115,15 @@
 ;;
 ;; Set a custom CSS file to use with:
 ;;
-;; ```plaintext
+;; ```
 ;; M-x markdown-soma-select-css-file
 ;; ```
-;; _Note: the CSS style will apply after restarting `markdown-soma-mode`._
+;;
+;;Note: the CSS style will apply after restarting `markdown-soma-mode`.
+;; 
+;; ```
+;; M-x markdown-soma-restart
+;; ```
 ;;
 ;; To persist the setting add to your Emacs init
 ;;
@@ -128,7 +133,7 @@
 ;;
 ;; You can select a [highlightjs] theme:
 ;;
-;; ```plaintext
+;; ```
 ;; M-x markdown-soma-select-highlight-theme
 ;; ```
 ;;
@@ -325,15 +330,15 @@ By default, `~/.cargo/bin' will be in `$PATH'."
   "Render TEXT via soma.
 
 markdown-soma-render is debounced to 250ms."
-  (when (null markdown-soma--render-gate)
-    (process-send-string (get-process"markdown-soma") (format "%s\n" text))
-    (process-send-eof (get-process"markdown-soma")))
+  (unless markdown-soma--render-gate
+    (process-send-string (get-process "markdown-soma") (format "%s\n" text))
+    (process-send-eof (get-process "markdown-soma")))
   (setq-local markdown-soma--render-gate t)
   (run-with-timer 0.250 nil
                   (lambda ()
                     (setq-local markdown-soma--render-gate nil))))
 
-(defun markdown-soma--buffer-as-source (text)
+(defun markdown-soma--code-fence (text)
  "Wrap TEXT in markdown code fence."
  (format "```\n%s\n```" text))
 
@@ -342,7 +347,7 @@ markdown-soma-render is debounced to 250ms."
   (markdown-soma-render
    (format "<!-- SOMA: {\"scrollTo\": %f} -->\n%s"
            (markdown-soma-current-scroll-percent)
-           (if markdown-soma-source-view (markdown-soma--buffer-as-source (buffer-string)) (buffer-string)))))
+           (if markdown-soma-source-view (markdown-soma--code-fence (buffer-string)) (buffer-string)))))
 
 (defun markdown-soma-hooks-add ()
   "Activate hooks to trigger soma."
