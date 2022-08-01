@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.2.6
+;; Version: 0.2.7
 ;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -120,7 +120,7 @@
 ;;  ```
 ;;  _Note: the CSS style will apply after restarting `markdown-soma-mode`._
 ;;
-;;  To persist the setting add to your emacs init
+;;  To persist the setting add to your Emacs init
 ;;
 ;;  ```
 ;;  (setq markdown-soma-custom-css "/path/to/your.css")
@@ -132,7 +132,7 @@
 ;;  M-x markdown-soma-select-highlight-theme
 ;;  ```
 ;;
-;;  To persist the setting add to your emacs init
+;;  To persist the setting add to your Emacs init
 ;;
 ;;  ```
 ;;  ;; Change "theme name" to the selected highlightjs theme.
@@ -230,7 +230,7 @@
   :require 'markdown-soma
   :group 'markdown-soma)
 
-(defcustom markdown-soma-custom-css (markdown-soma--css-pathname-from-builtin-name "markdown-soma")
+(defcustom markdown-soma-custom-css nil
   "Custom CSS can be set to a file or url."
   :type '(string)
   :require 'markdown-soma
@@ -290,6 +290,34 @@ By default, `~/.cargo/bin' will be in `$PATH'."
 (defvar markdown-soma-source-view nil
   "Toggle on to view source in browser.")
 
+;;;###autoload
+(defun markdown-soma--source-dir ()
+ "The installed location of markdown-soma."
+ (f-dirname
+  (file-truename
+   (replace-regexp-in-string "[.]elc$" ".el"
+                   (locate-library "markdown-soma")))))
+
+;;;###autoload
+(defun markdown-soma--is-css-file-p (file)
+  "Rudimenmtary check that FILE is css, does it's name end with .css?"
+  (s-ends-with? ".css" file))
+
+;;;###autoload
+(defun markdown-soma--builtin-css-theme-files ()
+  "A list of CSS themes filenames supplied with markdown-soma."
+  (f-entries (format "%s%s%s"
+              (markdown-soma--source-dir)
+              (f-path-separator)
+              "styles")
+             'markdown-soma--is-css-file-p nil))
+
+;;;###autoload
+(defun markdown-soma--css-pathname-from-builtin-name (name)
+  "Return the path and filename of CSS theme matching NAME."
+  (--find (s-ends-with-p (format "%s.css" name) it) (markdown-soma--builtin-css-theme-files)))
+
+;;;###autoload
 (defun markdown-soma-render (text)
   "Render TEXT via soma.
 
@@ -302,10 +330,12 @@ markdown-soma-render is debounced to 250ms."
                   (lambda ()
                     (setq-local markdown-soma--render-gate nil))))
 
+;;;###autoload
 (defun markdown-soma--buffer-as-source (text)
  "Wrap TEXT in markdown code fence."
  (format "```\n%s\n```" text))
 
+;;;###autoload
 (defun markdown-soma-render-buffer ()
   "Render buffer via soma."
   (markdown-soma-render
@@ -313,20 +343,24 @@ markdown-soma-render is debounced to 250ms."
            (markdown-soma-current-scroll-percent)
            (if markdown-soma-source-view (markdown-soma--buffer-as-source (buffer-string)) (buffer-string)))))
 
+;;;###autoload
 (defun markdown-soma-hooks-add ()
   "Activate hooks to trigger soma."
   (add-hook 'kill-buffer-hook #'markdown-soma-stop nil t)
   (--map (add-hook it #'markdown-soma-render-buffer nil t)
     markdown-soma--render-buffer-hooks))
 
+;;;###autoload
 (defun markdown-soma-hooks-remove ()
   "Deactivate hooks to stop triggering soma."
   (remove-hook 'kill-buffer-hook #'markdown-soma-stop)
   (--map (remove-hook it #'markdown-soma-render-buffer)
      markdown-soma--render-buffer-hooks))
 
+;;;###autoload
 (defun markdown-soma-start ()
   "Start soma process, send a message if it cannot be found."
+  (unless markdown-soma-custom-css (setq markdown-soma-custom-css (markdown-soma--css-pathname-from-builtin-name "markdown-soma")))
   (if (executable-find "soma")
       (progn
         (message "markdown-soma-start")
@@ -339,12 +373,14 @@ markdown-soma-render is debounced to 250ms."
     (switch-to-buffer-other-window (help-buffer))
     (help-insert-string markdown-soma--needs-executable-message)))
 
+;;;###autoload
 (defun markdown-soma-stop ()
   "Stop a running soma session."
   (message "markdown-soma-stop")
   (markdown-soma-hooks-remove)
   (markdown-soma--kill))
-  
+
+;;;###autoload
 (defun markdown-soma-restart ()
   "Restart a running soma session."
   (interactive)
@@ -354,6 +390,7 @@ markdown-soma-render is debounced to 250ms."
         (run-with-timer 0.2 nil #'markdown-soma-start))
     (user-error "Please note markdown-soma-mode is not currently active")))
 
+;;;###autoload
 (defun markdown-soma--run ()
   "Run soma."
   (start-process-shell-command
@@ -363,6 +400,7 @@ markdown-soma-render is debounced to 250ms."
   (set-process-query-on-exit-flag
    (get-process "markdown-soma") nil))
 
+;;;###autoload
 (defun markdown-soma--shell-command ()
   "Generate the markdown-soma shell command."
   (format "soma %s %s %s %s %s"
@@ -383,6 +421,7 @@ markdown-soma-render is debounced to 250ms."
                                              (expand-file-name
                                               (or markdown-soma-working-directory default-directory))))))
 
+;;;###autoload
 (defun markdown-soma--kill ()
   "Kill soma process and buffer."
   (when (buffer-live-p (get-buffer "*markdown-soma*"))
@@ -401,28 +440,11 @@ markdown-soma-render is debounced to 250ms."
       (count-lines 1 (buffer-size))
       1.0)))
 
-(defun markdown-soma--is-css-file-p (file)
-  "Rudimenmtary check that FILE is css, does it's name end with .css?"
-  (s-ends-with? ".css" file))
 
-(defun markdown-soma--source-dir ()
- "The installed location of markdown-soma."
- (f-dirname
-  (file-truename
-   (replace-regexp-in-string "[.]elc$" ".el"
-                   (locate-library "markdown-soma")))))
 
 (defun markdown-soma--builtin-css-theme-names ()
   "A list of CSS theme names supplied with markdown-soma."
   (--map (f-base it) (markdown-soma--builtin-css-theme-files)))
-
-(defun markdown-soma--builtin-css-theme-files ()
-  "A list of CSS themes filenames supplied with markdown-soma."
-  (f-entries (format "%s%s%s"
-              (markdown-soma--source-dir)
-              (f-path-separator)
-              "styles")
-             'markdown-soma--is-css-file-p nil))
 
 (defun markdown-soma--highlightjs-themes ()
   "A list of highlightjs themes."
@@ -433,10 +455,6 @@ markdown-soma-render is debounced to 250ms."
                      (markdown-soma--source-dir)
                      (f-path-separator)
                      "highlightjs.themes")))))
-
-(defun markdown-soma--css-pathname-from-builtin-name (name)
-  "Return the path and filename of CSS theme matching NAME."
-  (--find (s-ends-with-p (format "%s.css" name) it) (markdown-soma--builtin-css-theme-files)))
 
 (defun markdown-soma-select-builtin-css ()
   "Select markdown CSS from builtin themes."
