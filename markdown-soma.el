@@ -5,7 +5,7 @@
 ;; Author: Jason Milkins <jasonm23@gmail.com>
 ;; URL: https://github.com/jasonm23/markdown-soma
 ;; Keywords: wp, docs, text, markdown
-;; Version: 0.3.1
+;; Version: 0.3.0
 ;; Package-Requires: ((emacs "25") (s "1.11.0") (dash "2.19.1") (f "0.20.0"))
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -337,12 +337,12 @@ This will trigger markdown-soma-restart in an active session."
 (defun markdown-soma-render (text)
   "Render TEXT via soma.
 
-markdown-soma-render is debounced to 400ms."
+markdown-soma-render is debounced to 250ms."
   (unless markdown-soma--render-gate
     (process-send-string (get-process "markdown-soma") (format "%s\n" text))
     (process-send-eof (get-process "markdown-soma")))
   (setq-local markdown-soma--render-gate t)
-  (run-with-timer 0.400 nil
+  (run-with-timer 0.350 nil
      (lambda ()
        (setq-local markdown-soma--render-gate nil))))
 
@@ -403,13 +403,12 @@ markdown-soma-render is debounced to 400ms."
 
 (defun markdown-soma--run ()
   "Run soma."
-  (let ((process-name (format "%s-markdown-soma-process" (buffer-name))))
-   (start-process-shell-command
-     process-name
-     (format "*%s-buffer*" process-name)
-     (markdown-soma--shell-command))
-   (set-process-query-on-exit-flag
-    (get-process process-name) nil)))
+  (start-process-shell-command
+   "markdown-soma"
+   "*markdown-soma*"
+   (markdown-soma--shell-command))
+  (set-process-query-on-exit-flag
+   (get-process "markdown-soma") nil))
 
 (defun markdown-soma--shell-command ()
   "Generate the markdown-soma shell command."
@@ -433,9 +432,8 @@ markdown-soma-render is debounced to 400ms."
 
 (defun markdown-soma--kill ()
   "Kill soma process and buffer."
-  (let ((process-buffer-name (format "*%s-markdown-soma-process-buffer*" (buffer-name))))
-   (when (buffer-live-p (get-buffer process-buffer-name))
-     (kill-buffer process-buffer-name))))
+  (when (buffer-live-p (get-buffer "*markdown-soma*"))
+    (kill-buffer "*markdown-soma*")))
 
 (defun markdown-soma--window-point ()
   "Return the current (column . row) within the window."
