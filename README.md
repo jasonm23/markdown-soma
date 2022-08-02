@@ -1,4 +1,3 @@
-
 # Markdown Soma
 
 ### Live Markdown in Emacs
@@ -27,7 +26,7 @@ improve it are welcome.)_
 
 A new markdown render triggers by hooks in  `markdown-soma--render-buffer-hooks`.
 
-```emacs-lisp
+```lisp
 ;; default render buffer hooks
 
 (setq markdown-soma--render-buffer-hooks
@@ -49,7 +48,7 @@ Using [Doom Emacs](https://github.com/doomemacs/doomemacs)
 
 in `~/.doom.d/packages.el`
 
-```
+```lisp
 (package! markdown-soma)
 ```
 
@@ -72,7 +71,7 @@ By default, `~/.cargo/bin` will be in your `$PATH`.
 
 ## Customizing
 
-You can select a builtin CSS theme:
+You can select a builtin CSS theme with::
 
 ```
 M-x markdown-soma-select-builtin-css
@@ -80,7 +79,7 @@ M-x markdown-soma-select-builtin-css
 
 To persist the setting, select a theme name and add it to your Emacs init with:
 
-```
+```lisp
 (setq markdown-soma-custom-css
    (markdown-soma--css-pathname-from-builtin-name "theme name")
 ```
@@ -95,15 +94,15 @@ Set a custom CSS file to use with:
 M-x markdown-soma-select-css-file
 ```
 
-CSS styles will be applied after restarting `markdown-soma-mode`.
+Note: the CSS style will apply after restarting `markdown-soma-mode`.
 
 ```
 M-x markdown-soma-restart
 ```
 
-To persist the setting add to your Emacs init:
+To persist the setting add to your Emacs init
 
-```
+```lisp
 (setq markdown-soma-custom-css "/path/to/your.css")
 ```
 
@@ -115,10 +114,11 @@ M-x markdown-soma-select-highlight-theme
 
 To persist the setting add to your Emacs init
 
-```
+```lisp
 ;; Change "theme name" to the selected highlightjs theme.
 (setq markdown-soma-highlightjs-theme "theme name")
 ```
+
 ## Markdown support
 
 Soma converts markdown to HTML, using [pulldown-cmark].
@@ -166,7 +166,7 @@ changes to connected clients (as HTML).
 Emacs embeds a value for `scrollTo`, into the input with a
 magic comment e.g.
 
-```
+```html
 <!-- SOMA: {"scrollTo": 0} // scrolls to the top.  -->
 ```
 
