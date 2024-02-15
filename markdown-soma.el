@@ -313,10 +313,18 @@ This will trigger markdown-soma-restart in an active session."
 
 (defun markdown-soma--source-dir ()
  "The installed location of markdown-soma."
- (f-dirname
-  (file-truename
-   (replace-regexp-in-string "[.]elc$" ".el"
-                   (locate-library "markdown-soma")))))
+ (let ((markdown-soma-pkg-dir
+                              (f-dirname
+                               (file-truename
+                                (replace-regexp-in-string "[.]elc$" ".el"
+                                                (locate-library "markdown-soma"))))))
+   ;;; HACK: work around doom/straight.  Tested working on windows.
+   ;;; We'll assume the repo was installed via doom/straight
+   ;;; if .local/build is part of the pathname
+   (if (s-contains-p "straight/build" markdown-soma-pkg-dir)
+       (s-replace-regexp "straight/build-.*/" "straight/repos/" markdown-soma-pkg-dir)
+     ;; Or we return as is
+     markdown-soma-pkg-dir)))
 
 (defun markdown-soma--is-css-file-p (file)
   "Rudimenmtary check that FILE is css, does it's name end with .css?"
